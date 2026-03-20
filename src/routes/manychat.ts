@@ -110,6 +110,9 @@ export async function manychatRoutes(app: FastifyInstance) {
       hasDimensions: !!intent.dimensions,
       quantity: intent.quantity,
       suggestedThicknessMm: intent.suggestedThicknessMm,
+      explicitSize: intent.explicitSize,
+      explicitThicknessMm: intent.explicitThicknessMm,
+      isAvailabilityQuestion: intent.isAvailabilityQuestion,
     });
 
     let response: ManyChatResponse | null = null;
@@ -127,7 +130,7 @@ export async function manychatRoutes(app: FastifyInstance) {
       }
     } else if (intent.primary === "produto") {
       // Intencao de produto: catalogo primeiro, com contexto de intencao
-      const product = findProduct(message);
+      const product = findProduct(message, intent);
       if (product) {
         response = buildProductReply(product, intent);
       }
@@ -157,7 +160,7 @@ export async function manychatRoutes(app: FastifyInstance) {
       }
       // 3. Catalogo
       if (!response) {
-        const product = findProduct(message);
+        const product = findProduct(message, intent);
         if (product) {
           response = buildProductReply(product, intent);
         }

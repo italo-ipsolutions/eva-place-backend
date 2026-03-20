@@ -1,0 +1,26 @@
+{
+  "_comment": "Teste: 'Voces tem tatame de 1 metro?' — deve retornar tatame 1x1m (disponibilidade)",
+  "_expected": {
+    "intent": {
+      "primary": "produto",
+      "explicitSize": "1x1",
+      "isAvailabilityQuestion": true
+    },
+    "product": "tatame_1x1m",
+    "response_type": "disponibilidade"
+  },
+  "subscriber": {
+    "id": "teste-1metro-001",
+    "key": "teste-1metro-001",
+    "page_id": "123456",
+    "first_name": "Joao",
+    "last_name": "Teste",
+    "name": "Joao Teste",
+    "phone": "+5585999990002",
+    "whatsapp_phone": "+5585999990002",
+    "last_input_text": "Voces tem tatame de 1 metro?",
+    "last_interaction": "2026-03-20T10:05:00Z",
+    "subscribed": "2026-03-20T10:05:00Z",
+    "gender": "male"
+  }
+}

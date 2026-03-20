@@ -1,0 +1,28 @@
+{
+  "_comment": "Teste: 'Tem tatame 1x1 20mm?' — deve retornar tatame 1x1m 20mm (disponibilidade), NAO 50x50 10mm",
+  "_expected": {
+    "intent": {
+      "primary": "produto",
+      "explicitSize": "1x1",
+      "explicitThicknessMm": 20,
+      "isAvailabilityQuestion": true
+    },
+    "product": "tatame_1x1m",
+    "variante_espessura": 20,
+    "response_type": "disponibilidade (sem calculo de quantidade)"
+  },
+  "subscriber": {
+    "id": "teste-1x1-20mm-001",
+    "key": "teste-1x1-20mm-001",
+    "page_id": "123456",
+    "first_name": "Maria",
+    "last_name": "Teste",
+    "name": "Maria Teste",
+    "phone": "+5585999990001",
+    "whatsapp_phone": "+5585999990001",
+    "last_input_text": "Tem tatame 1x1 20mm?",
+    "last_interaction": "2026-03-20T10:00:00Z",
+    "subscribed": "2026-03-20T10:00:00Z",
+    "gender": "female"
+  }
+}

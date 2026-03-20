@@ -18,15 +18,47 @@ function termMatches(query: string, term: string): boolean {
   return new RegExp(`(?:^|\\s|[^a-z])${escaped}(?:$|\\s|[^a-z])`).test(query);
 }
 
-/** Busca categorias/produtos que casam com a mensagem */
-export function findProduct(message: string): CategoriaProduto | null {
+/**
+ * Busca categorias/produtos que casam com a mensagem.
+ * Quando recebe intent com explicitSize, usa isso para selecionar a categoria CORRETA
+ * ao inves de depender da ordem do termMap (que antes matchava "tatame" → 50x50 primeiro).
+ *
+ * PRIORIDADE:
+ * 1. intent.explicitSize → seleciona tatame_50x50 ou tatame_1x1m diretamente
+ * 2. intent.useCase com productSize → seleciona categoria pelo uso
+ * 3. termMap generico → fallback (ordem nao importa mais para tatames)
+ */
+export function findProduct(message: string, intent?: DetectedIntent): CategoriaProduto | null {
   const ctx = getContext();
   const q = normalize(message);
 
-  // Mapeamento de termos comuns para IDs de categoria
+  // ---- 1. TAMANHO EXPLICITO do intent tem prioridade maxima ----
+  const targetSize = intent?.explicitSize ?? (intent?.useCase ? undefined : undefined);
+  // Se intent define explicitSize OU useCase com productSize inferido
+  const inferredSize = intent?.explicitSize
+    // Se nao tem explicitSize, mas useCase sugere um productSize, usar esse
+    // (productSize vem do USE_CASE_MAP em intent.ts, ex: "bebe" → "50x50", "jiu-jitsu" → "1x1")
+    // Porem, o intent.ts ja resolve isso e coloca em explicitSize quando ha useCase.
+    // Entao aqui basta checar explicitSize.
+    ;
+
+  if (intent?.explicitSize === "1x1") {
+    const cat = ctx.catalogo.categorias.find((c) => c.id === "tatame_1x1m");
+    if (cat) return cat;
+  }
+
+  if (intent?.explicitSize === "50x50") {
+    const cat = ctx.catalogo.categorias.find((c) => c.id === "tatame_50x50");
+    if (cat) return cat;
+  }
+
+  // ---- 2. Mapeamento de termos para categorias (SEM "tatame" generico) ----
+  // "tatame" generico agora e tratado por ultimo para evitar falso positivo
   const termMap: Record<string, string[]> = {
-    tatame_50x50: ["tatame", "tapete eva", "50x50", "bebe", "engatinhar", "piso eva"],
-    tatame_1x1m: ["1x1", "profissional", "jiu-jitsu", "jiu jitsu", "jiujitsu", "judo", "karate", "dojo", "luta", "arte marcial", "artes marciais"],
+    // Tatames com termos ESPECIFICOS (nao generico "tatame")
+    tatame_50x50: ["tapete eva", "50x50", "bebe", "engatinhar", "piso eva"],
+    tatame_1x1m: ["1x1", "1 metro", "um metro", "profissional", "jiu-jitsu", "jiu jitsu", "jiujitsu", "judo", "karate", "dojo", "luta", "arte marcial", "artes marciais"],
+    // Outros produtos
     tapetes_encaixe_kids: ["alfabeto", "letras", "numeros", "animais", "amarelinha", "pedagogico", "educativo", "escola"],
     rolos_esteiras: ["rolo", "esteira", "pista de carrinho", "mesversario"],
     miudezas: ["saco de letras", "pote de letras", "letras soltas"],
@@ -44,6 +76,20 @@ export function findProduct(message: string): CategoriaProduto | null {
       const cat = ctx.catalogo.categorias.find((c) => c.id === catId);
       if (cat) return cat;
     }
+  }
+
+  // ---- 3. "tatame" generico: so chega aqui se nenhum termo especifico bateu ----
+  // Se tem "tatame" mas nao casou nada acima, e porque nao tem spec explicita.
+  // Default para 50x50 (produto mais vendido) — a menos que useCase sugira 1x1
+  if (termMatches(q, "tatame") || termMatches(q, "eva")) {
+    // Se useCase sugere 1x1 (artes marciais, academia), usar 1x1
+    if (intent?.useCase && ["artes_marciais", "academia"].includes(intent.useCase)) {
+      const cat = ctx.catalogo.categorias.find((c) => c.id === "tatame_1x1m");
+      if (cat) return cat;
+    }
+    // Default: 50x50 (produto mais popular)
+    const cat = ctx.catalogo.categorias.find((c) => c.id === "tatame_50x50");
+    if (cat) return cat;
   }
 
   return null;
@@ -110,11 +156,19 @@ function findBestKit(
  * Agora usa contexto de intencao (dimensoes, uso, quantidade) para respostas mais precisas.
  */
 export function buildProductReply(cat: CategoriaProduto, intent?: DetectedIntent): ManyChatResponse {
+  // Espessura final: explicitThicknessMm > suggestedThicknessMm > default
+  const effectiveThicknessMm = intent?.explicitThicknessMm ?? intent?.suggestedThicknessMm;
+
   // ---- Tatame 50x50 com variantes e tabela de preco ----
   if (cat.id === "tatame_50x50" && cat.variantes?.length) {
-    // Escolher variante pela espessura sugerida, ou default 10mm
-    const targetMm = intent?.suggestedThicknessMm ?? 10;
+    // Escolher variante pela espessura (explicita > sugerida > default 10mm)
+    const targetMm = effectiveThicknessMm ?? 10;
     const variante = cat.variantes.find((v) => v.espessura_mm === targetMm) ?? cat.variantes[0];
+
+    // Se e pergunta de disponibilidade ("tem?"), NAO calcular quantidade automaticamente
+    if (intent?.isAvailabilityQuestion && !intent?.dimensions && !intent?.quantity) {
+      return buildAvailabilityReply50x50(cat, variante, intent);
+    }
 
     // Se temos dimensoes do espaco, calcular pecas
     const pieces = intent?.dimensions?.totalPieces50x50 ?? intent?.quantity;
@@ -153,7 +207,7 @@ export function buildProductReply(cat: CategoriaProduto, intent?: DetectedIntent
       };
     }
 
-    // Sem dimensoes — resposta consultiva mas mais rica que antes
+    // Sem dimensoes e sem disponibilidade — resposta consultiva
     const useCaseInfo = intent?.useCase
       ? getUseCaseLabel(intent.useCase, variante.espessura_mm)
       : `O de ${variante.espessura_mm}mm e ideal pra ${variante.uso_recomendado}.`;
@@ -186,8 +240,16 @@ export function buildProductReply(cat: CategoriaProduto, intent?: DetectedIntent
 
   // ---- Tatame 1x1m (profissional) ----
   if (cat.id === "tatame_1x1m" && cat.variantes?.length) {
-    const targetMm = intent?.suggestedThicknessMm ?? 30;
-    const variante = cat.variantes.find((v) => v.espessura_mm >= targetMm) ?? cat.variantes[2]; // default 30mm
+    // Espessura: explicita > sugerida > default 30mm
+    const targetMm = effectiveThicknessMm ?? 30;
+    const variante = cat.variantes.find((v) => v.espessura_mm === targetMm)
+      ?? cat.variantes.find((v) => v.espessura_mm >= targetMm)
+      ?? cat.variantes[cat.variantes.length - 1]; // fallback: ultima variante (maior espessura)
+
+    // Se e pergunta de disponibilidade ("tem?"), NAO calcular quantidade
+    if (intent?.isAvailabilityQuestion && !intent?.quantity) {
+      return buildAvailabilityReply1x1(cat, variante, intent);
+    }
 
     const qty = intent?.quantity ?? (intent?.dimensions
       ? Math.ceil(intent.dimensions.widthM) * Math.ceil(intent.dimensions.heightM)
@@ -254,6 +316,71 @@ export function buildProductReply(cat: CategoriaProduto, intent?: DetectedIntent
     reply: `Temos ${cat.nome}! Quer que eu te mostre as opcoes e precos?`,
     action: "reply",
     _debug: { matched_intent: `produto_${cat.id}`, source: "catalogo", confidence: "medium" },
+  };
+}
+
+/**
+ * Resposta de disponibilidade para tatame 50x50.
+ * Usada quando o cliente pergunta "Tem tatame 50x50 20mm?" — sem calcular quantidade.
+ */
+function buildAvailabilityReply50x50(
+  cat: CategoriaProduto,
+  variante: any,
+  intent?: DetectedIntent
+): ManyChatResponse {
+  const avulso = variante.tabela_precos[0];
+  const kitSugerido = variante.tabela_precos.find((t: any) => t.faixa === "Kit 12");
+
+  const reply = [
+    `Temos sim! 😊 Tatame ${cat.nome} de *${variante.espessura_mm}mm* disponivel!`,
+    ``,
+    `👉 Avulso: *R$ ${avulso.preco_unitario.toFixed(2)}* cada`,
+    kitSugerido
+      ? `👉 Kit 12: *R$ ${kitSugerido.preco_total?.toFixed(2)}* (R$ ${kitSugerido.preco_unitario.toFixed(2)} cada)`
+      : "",
+    ``,
+    `Cores disponiveis: ${variante.cores_disponiveis.join(", ")}`,
+    variante.cores_em_falta.length ? `(${variante.cores_em_falta.join(", ")} em falta no momento)` : "",
+    ``,
+    `Quantas pecas voce precisa? Se me passar o tamanho do espaco, calculo certinho! 📐`,
+  ].filter(Boolean).join("\n");
+
+  return {
+    reply,
+    action: "reply",
+    add_tags: ["lead_qualificado"],
+    set_fields: { espessura_mm: variante.espessura_mm },
+    _debug: { matched_intent: "produto_tatame_50x50_disponibilidade", source: "catalogo", confidence: "high" },
+  };
+}
+
+/**
+ * Resposta de disponibilidade para tatame 1x1m.
+ * Usada quando o cliente pergunta "Tem tatame 1x1 20mm?" — sem calcular quantidade.
+ */
+function buildAvailabilityReply1x1(
+  cat: CategoriaProduto,
+  variante: any,
+  intent?: DetectedIntent
+): ManyChatResponse {
+  const reply = [
+    `Temos sim! 😊 Tatame 1x1m de *${variante.espessura_mm}mm* disponivel!`,
+    ``,
+    `👉 *R$ ${(variante as any).preco_unitario?.toFixed(2) ?? "consulte"}* cada peca (1m²)`,
+    ``,
+    `Cores disponiveis: ${(variante as any).cores_disponiveis?.join(", ") ?? "consulte"}`,
+    (variante as any).restricoes?.length ? `⚠️ ${(variante as any).restricoes.join(". ")}` : "",
+    (variante as any).frete_especial ? `🚚 ${(variante as any).frete_especial}` : "",
+    ``,
+    `Quantas pecas voce precisa? 💪`,
+  ].filter(Boolean).join("\n");
+
+  return {
+    reply,
+    action: "reply",
+    add_tags: ["lead_qualificado"],
+    set_fields: { espessura_mm: variante.espessura_mm },
+    _debug: { matched_intent: "produto_tatame_1x1m_disponibilidade", source: "catalogo", confidence: "high" },
   };
 }
 

@@ -1,0 +1,28 @@
+{
+  "_comment": "Teste: 'Tem tatame 50x50 15mm?' — deve retornar tatame 50x50 15mm (disponibilidade)",
+  "_expected": {
+    "intent": {
+      "primary": "produto",
+      "explicitSize": "50x50",
+      "explicitThicknessMm": 15,
+      "isAvailabilityQuestion": true
+    },
+    "product": "tatame_50x50",
+    "variante_espessura": 15,
+    "response_type": "disponibilidade"
+  },
+  "subscriber": {
+    "id": "teste-50x50-15mm-001",
+    "key": "teste-50x50-15mm-001",
+    "page_id": "123456",
+    "first_name": "Ana",
+    "last_name": "Teste",
+    "name": "Ana Teste",
+    "phone": "+5585999990003",
+    "whatsapp_phone": "+5585999990003",
+    "last_input_text": "Tem tatame 50x50 15mm?",
+    "last_interaction": "2026-03-20T10:10:00Z",
+    "subscribed": "2026-03-20T10:10:00Z",
+    "gender": "female"
+  }
+}
