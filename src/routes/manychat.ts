@@ -3,7 +3,7 @@ import type { ManyChatResponse } from "../types/index.js";
 import { verifyWebhook } from "../lib/auth.js";
 import { parseManyChatPayload } from "../lib/manychat-parser.js";
 import { getLeadMemory, addUserTurn, addAssistantTurn } from "../lib/memory.js";
-import { logInbound, logOutbound, logError } from "../lib/logger.js";
+import { logInbound, logOutbound, logError, logInfo } from "../lib/logger.js";
 import { isFreteQuestion, buildFreteReply } from "../lib/frete.js";
 import { matchFaq } from "../lib/faq.js";
 import { findProduct, buildProductReply } from "../lib/catalog.js";
@@ -20,8 +20,16 @@ export async function manychatRoutes(app: FastifyInstance) {
   });
 
   app.post("/webhooks/manychat/inbound", async (req, reply) => {
-    // Normalizar payload (aceita formato bruto do ManyChat)
-    const payload = parseManyChatPayload(req.body as Record<string, unknown>);
+    // Log do payload bruto para inspecao (truncado para nao logar dados excessivos)
+    const rawBody = req.body as Record<string, unknown>;
+    logInfo("webhook_raw_payload", {
+      has_subscriber: !!rawBody.subscriber,
+      top_keys: Object.keys(rawBody).slice(0, 15),
+      content_type: req.headers["content-type"],
+    });
+
+    // Normalizar payload (aceita formato nativo "Add Full Contact Data" e flat/manual)
+    const payload = parseManyChatPayload(rawBody);
     const { subscriber_id: subId, name, phone } = payload;
 
     // Inicializar/recuperar memoria do lead
@@ -34,7 +42,7 @@ export async function manychatRoutes(app: FastifyInstance) {
       if (!isOpenAIConfigured()) {
         const resp = noOpenAIResponse("image");
         logOutbound(subId, resp._debug!.matched_intent, resp._debug!.source, resp.action);
-        return reply.send(resp);
+        return reply.send({ ...resp, backend_reply: resp.reply });
       }
 
       try {
@@ -42,10 +50,11 @@ export async function manychatRoutes(app: FastifyInstance) {
         const response = await analyzeImage(payload.image_url, payload.message);
         addAssistantTurn(subId, response.reply, "openai_vision");
         logOutbound(subId, response._debug!.matched_intent, response._debug!.source, response.action, response.reply);
-        return reply.send(response);
+        return reply.send({ ...response, backend_reply: response.reply });
       } catch (err) {
         logError("image_analysis_error", err, { subscriber_id: subId });
-        return reply.send(buildFallbackReply());
+        const fb = buildFallbackReply();
+        return reply.send({ ...fb, backend_reply: fb.reply });
       }
     }
 
@@ -58,7 +67,7 @@ export async function manychatRoutes(app: FastifyInstance) {
       if (!isOpenAIConfigured()) {
         const resp = noOpenAIResponse("audio");
         logOutbound(subId, resp._debug!.matched_intent, resp._debug!.source, resp.action);
-        return reply.send(resp);
+        return reply.send({ ...resp, backend_reply: resp.reply });
       }
 
       try {
@@ -70,13 +79,14 @@ export async function manychatRoutes(app: FastifyInstance) {
             _debug: { matched_intent: "audio_empty", source: "media", confidence: "low" },
           };
           logOutbound(subId, "audio_empty", "media", "reply");
-          return reply.send(resp);
+          return reply.send({ ...resp, backend_reply: resp.reply });
         }
         message = transcription;
         addUserTurn(subId, message, "audio");
       } catch (err) {
         logError("audio_transcribe_error", err, { subscriber_id: subId });
-        return reply.send(buildFallbackReply());
+        const fb = buildFallbackReply();
+        return reply.send({ ...fb, backend_reply: fb.reply });
       }
     } else if (message) {
       addUserTurn(subId, message, "text");
@@ -130,7 +140,12 @@ export async function manychatRoutes(app: FastifyInstance) {
       response.reply
     );
 
-    return reply.send(response);
+    // Enviar resposta com alias backend_reply para facilitar mapeamento no ManyChat
+    const responseWithAlias = {
+      ...response,
+      backend_reply: response.reply,
+    };
+    return reply.send(responseWithAlias);
   });
 }
 

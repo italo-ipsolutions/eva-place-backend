@@ -13,13 +13,14 @@ ManyChat (WhatsApp)
   |
   +-- External Request (webhook POST)
   |     Header: X-Webhook-Secret
-  |     Body: { id, full_name, whatsapp_phone, last_input_text, ... }
+  |     Body: "Add Full Contact Data" (recomendado)
+  |           ou JSON manual flat (compativel)
   |
   v
 Backend (este repositorio)
   |
   +-- Auth (valida secret)
-  +-- Parser (normaliza payload ManyChat -> formato interno)
+  +-- Parser (detecta formato nativo/flat, normaliza)
   +-- Memory (ultimos N turnos por lead, in-memory)
   +-- Pipeline:
   |     1. Matchers locais (frete, FAQ, catalogo)
@@ -134,21 +135,36 @@ O deploy e feito importando este repositorio GitHub diretamente no painel da Hos
 
 ## Configurar no ManyChat (pos-deploy)
 
+### Modo recomendado: Add Full Contact Data (nativo)
+
+> **Este e o modo preferido.** Nao exige montar JSON manual no editor do ManyChat.
+
 1. ManyChat > Automation > Flow > bloco **External Request**
 2. **URL:** `https://api.evaplace.com.br/webhooks/manychat/inbound`
 3. **Method:** POST
 4. **Headers:**
    - `Content-Type: application/json`
    - `X-Webhook-Secret: SEU_SECRET` (mesmo valor do .env no servidor)
-5. **Body:**
-   ```json
-   {
-     "id": "{{id}}",
-     "full_name": "{{full_name}}",
-     "whatsapp_phone": "{{whatsapp_phone}}",
-     "last_input_text": "{{last_input_text}}",
-     "last_input_audio": "{{last_input_audio_url}}",
-     "last_input_image": "{{last_input_image_url}}"
-   }
-   ```
-6. **Response Mapping:** mapear `reply` para resposta
+5. **Body:** clicar em **Add Full Contact Data** (botao azul no editor)
+   - Nao precisa montar JSON manual
+   - O ManyChat envia automaticamente todos os campos do contato dentro de `subscriber`
+6. **Response Mapping:** mapear `backend_reply` para a variavel de resposta do flow
+
+O backend detecta automaticamente se o payload e nativo (`subscriber`) ou flat (JSON manual).
+
+### Modo alternativo: JSON manual (compatibilidade)
+
+Se por algum motivo precisar usar JSON manual no body:
+
+```json
+{
+  "id": "{{id}}",
+  "full_name": "{{full_name}}",
+  "whatsapp_phone": "{{whatsapp_phone}}",
+  "last_input_text": "{{last_input_text}}",
+  "last_input_audio": "{{last_input_audio_url}}",
+  "last_input_image": "{{last_input_image_url}}"
+}
+```
+
+> Ambos os formatos funcionam. O parser identifica qual formato veio e normaliza.
