@@ -1,0 +1,38 @@
+{
+  "_comment": "Payload real que a Meta envia ao webhook quando o cliente manda texto no WhatsApp",
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "5585999999999",
+              "phone_number_id": "PHONE_NUMBER_ID"
+            },
+            "contacts": [
+              {
+                "profile": { "name": "Maria Silva" },
+                "wa_id": "5585998725377"
+              }
+            ],
+            "messages": [
+              {
+                "from": "5585998725377",
+                "id": "wamid.HBgNNTU4NTk5ODcyNTM3NxUCABIYFjNFQjA0RjdGOEMxNDVBMkU2MzYzAA==",
+                "timestamp": "1710936120",
+                "type": "text",
+                "text": {
+                  "body": "Quanto custa o tatame 50x50 20mm?"
+                }
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

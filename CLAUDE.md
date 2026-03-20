@@ -42,9 +42,11 @@ npm run sync:catalog:dry   # Simular sem salvar
 
 ## Convencoes
 
-- **Rota recomendada:** `/webhooks/manychat/dynamic` (Dynamic Block — resposta direto ao contato)
-- **Rota legada:** `/webhooks/manychat/inbound` (External Request — causa atraso 1 turno)
+- **Rota principal:** `/webhooks/whatsapp` (WhatsApp Cloud API — integracao direta, sem ManyChat)
+- **Rota ManyChat:** `/webhooks/manychat/dynamic` (Dynamic Block — fallback se ainda usar ManyChat)
+- **Rota legada:** `/webhooks/manychat/inbound` (External Request — NAO usar)
 - Matchers locais primeiro, OpenAI segundo, fallback humano terceiro
+- WhatsApp Cloud API: backend recebe + responde direto (sem intermediario)
 - CONTEXT_BASE_PATH default: `./BACKEND_BASE` (interno ao repo)
 - Startup file para producao: `dist/server.js`
 - Deploy via GitHub import na Hostinger (subdominio api.evaplace.com.br)

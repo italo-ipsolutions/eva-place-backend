@@ -1,0 +1,29 @@
+{
+  "_comment": "Payload da Meta para delivery status update (mensagem entregue/lida)",
+  "object": "whatsapp_business_account",
+  "entry": [
+    {
+      "id": "WHATSAPP_BUSINESS_ACCOUNT_ID",
+      "changes": [
+        {
+          "value": {
+            "messaging_product": "whatsapp",
+            "metadata": {
+              "display_phone_number": "5585999999999",
+              "phone_number_id": "PHONE_NUMBER_ID"
+            },
+            "statuses": [
+              {
+                "id": "wamid.HBgNNTU4NTk5ODcyNTM3NxUCABIYFjNFQjA0RjdGOEMxNDVBMkU2MzYzAA==",
+                "status": "delivered",
+                "timestamp": "1710936150",
+                "recipient_id": "5585998725377"
+              }
+            ]
+          },
+          "field": "messages"
+        }
+      ]
+    }
+  ]
+}

@@ -10,35 +10,42 @@ Subdominio: `api.evaplace.com.br`
 ## Arquitetura
 
 ```
-ManyChat (WhatsApp)
-  |
-  +-- Dynamic Block (RECOMENDADO — sem atraso de 1 turno)
-  |     POST /webhooks/manychat/dynamic
-  |     Header: X-Webhook-Secret
-  |     Body: "Add Full Contact Data"
-  |     Resposta: mensagem pronta no formato Dynamic Block v2
-  |               -> ManyChat envia direto ao contato
-  |
-  +-- External Request (LEGADO — manter por compatibilidade)
-  |     POST /webhooks/manychat/inbound
-  |     Resposta: JSON com backend_reply -> custom field -> Send Message
-  |     ⚠️ Causa atraso de 1 turno por contaminacao de custom_fields
-  |
-  v
-Backend (este repositorio)
-  |
-  +-- Auth (valida secret)
-  +-- Parser (detecta formato nativo/flat, sanitiza custom_fields)
-  +-- Memory (ultimos N turnos por lead, in-memory)
-  +-- Pipeline:
-  |     1. Matchers locais (frete, FAQ, catalogo)
-  |     2. OpenAI (texto livre com historico)
-  |     3. Fallback (escalar humano)
-  +-- Logger (JSON estruturado)
-  |
-  v
-Dynamic Block: { version: "v2", content: { type: "whatsapp", messages: [...] } }
-  -> ManyChat envia direto ao contato (sem custom field intermediario)
+                      ┌──────────────────────────────────────┐
+                      │          WhatsApp do Cliente          │
+                      └──────────────┬───────────────────────┘
+                                     │
+               ┌─────────────────────┼─────────────────────┐
+               │                     │                     │
+     ┌─────────▼─────────┐ ┌────────▼────────┐  ┌─────────▼─────────┐
+     │ WhatsApp Cloud API │ │ ManyChat Dynamic│  │ ManyChat External │
+     │ (RECOMENDADO)      │ │ Block           │  │ Request (LEGADO)  │
+     │ GET+POST           │ │ POST            │  │ POST              │
+     │ /webhooks/whatsapp │ │ /webhooks/      │  │ /webhooks/        │
+     │                    │ │ manychat/dynamic│  │ manychat/inbound  │
+     └─────────┬──────────┘ └────────┬────────┘  └─────────┬─────────┘
+               │                     │                     │
+               └─────────────────────┼─────────────────────┘
+                                     │
+                          ┌──────────▼──────────┐
+                          │      Pipeline       │
+                          │  1. Intent detect   │
+                          │  2. Frete matcher   │
+                          │  3. FAQ matcher     │
+                          │  4. Catalogo        │
+                          │  5. OpenAI (GPT)    │
+                          │  6. Fallback        │
+                          │  + Memoria por lead │
+                          └──────────┬──────────┘
+                                     │
+                          ┌──────────▼──────────┐
+                          │     Resposta        │
+                          │  WhatsApp Cloud:    │
+                          │    API envia direto │
+                          │  ManyChat Dynamic:  │
+                          │    Block v2 format  │
+                          │  ManyChat External: │
+                          │    backend_reply    │
+                          └─────────────────────┘
 ```
 
 ## Estrutura do repositorio
@@ -60,10 +67,13 @@ EVA_PLACE_BACKEND_REPO/
     server.ts                # Ponto de entrada
     routes/
       health.ts              # GET /health
-      manychat.ts            # POST /webhooks/manychat/inbound (legado)
-      manychat-dynamic.ts    # POST /webhooks/manychat/dynamic (recomendado)
+      whatsapp-meta.ts       # GET+POST /webhooks/whatsapp (WhatsApp Cloud API — RECOMENDADO)
+      manychat-dynamic.ts    # POST /webhooks/manychat/dynamic (ManyChat Dynamic Block)
+      manychat.ts            # POST /webhooks/manychat/inbound (ManyChat legado)
     lib/
-      auth.ts                # Validacao webhook secret
+      whatsapp-meta-client.ts  # Envio de mensagens via WhatsApp Cloud API
+      whatsapp-meta-parser.ts  # Parse de webhooks da Meta
+      auth.ts                # Validacao webhook secret (ManyChat)
       manychat-parser.ts     # Normaliza payload ManyChat
       memory.ts              # Memoria curta in-memory por lead
       logger.ts              # Logger JSON estruturado
@@ -120,7 +130,11 @@ curl -s -X POST http://localhost:3100/webhooks/manychat/inbound \
 | `OPENAI_API_KEY` | Sim | Chave da OpenAI |
 | `OPENAI_TEXT_MODEL` | Nao | Modelo de texto (default: gpt-4o-mini) |
 | `OPENAI_TRANSCRIBE_MODEL` | Nao | Modelo de transcricao (default: gpt-4o-mini-transcribe) |
-| `WEBHOOK_SECRET` | Sim (prod) | Secret de autenticacao do webhook |
+| `WEBHOOK_SECRET` | Sim (ManyChat) | Secret de autenticacao do webhook ManyChat |
+| `META_WHATSAPP_VERIFY_TOKEN` | Sim (Meta) | Token de verificacao do webhook (voce escolhe) |
+| `META_WHATSAPP_ACCESS_TOKEN` | Sim (Meta) | Access Token da API WhatsApp |
+| `META_WHATSAPP_PHONE_NUMBER_ID` | Sim (Meta) | Phone Number ID do painel Meta |
+| `META_WHATSAPP_API_VERSION` | Nao | Versao da API Meta (default: v21.0) |
 | `WOOCOMMERCE_BASE_URL` | Sim (sync) | URL base do WooCommerce (ex: https://evaplace.com.br) |
 | `WOOCOMMERCE_CONSUMER_KEY` | Sim (sync) | Consumer Key da REST API |
 | `WOOCOMMERCE_CONSUMER_SECRET` | Sim (sync) | Consumer Secret da REST API |
@@ -165,7 +179,51 @@ O deploy e feito importando este repositorio GitHub diretamente no painel da Hos
 - `ops/hostinger-deploy.md` — guia passo a passo
 - `ops/hostinger-checklist.md` — checklist pre-deploy
 
-## Configurar no ManyChat (pos-deploy)
+## WhatsApp Cloud API (Meta) — Integracao direta (RECOMENDADO)
+
+> **Este e o modo preferido.** O backend se comunica diretamente com a API
+> oficial do WhatsApp, sem intermediario. Sem ManyChat, sem atraso, controle total.
+
+### Resumo
+
+| Rota | Metodo | Funcao |
+|------|--------|--------|
+| `/webhooks/whatsapp` | GET | Verificacao do webhook (Meta challenge) |
+| `/webhooks/whatsapp` | POST | Receber mensagens + processar + responder direto |
+
+### Configurar
+
+1. Criar app no [Meta for Developers](https://developers.facebook.com/apps/)
+2. Adicionar produto WhatsApp
+3. Gerar Access Token (permanente para producao)
+4. Configurar no `.env`:
+   ```env
+   META_WHATSAPP_VERIFY_TOKEN=um_token_seguro_que_voce_inventa
+   META_WHATSAPP_ACCESS_TOKEN=EAA...
+   META_WHATSAPP_PHONE_NUMBER_ID=123456789012345
+   ```
+5. No painel Meta > WhatsApp > Configuration:
+   - **Callback URL:** `https://api.evaplace.com.br/webhooks/whatsapp`
+   - **Verify Token:** mesmo valor de `META_WHATSAPP_VERIFY_TOKEN`
+   - Assinar campo: **messages**
+
+### Testar
+
+```bash
+# Verificacao do webhook (simula o que a Meta faz)
+curl -s "http://localhost:3100/webhooks/whatsapp?hub.mode=subscribe&hub.verify_token=SEU_TOKEN&hub.challenge=teste123"
+
+# Simular mensagem de texto inbound (sem enviar resposta — access token nao configurado)
+curl -s -X POST http://localhost:3100/webhooks/whatsapp \
+  -H "Content-Type: application/json" \
+  -d @examples/payload_whatsapp_meta_text.json
+```
+
+> Documentacao completa: `ops/whatsapp-cloud-setup.md`
+
+---
+
+## Configurar no ManyChat (pos-deploy) — alternativa
 
 ### ✅ Modo recomendado: Dynamic Block (sem atraso)
 
