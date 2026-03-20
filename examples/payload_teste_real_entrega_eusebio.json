@@ -1,0 +1,11 @@
+{
+  "_comentario": "Teste real: cliente pergunta entrega para cidade especifica",
+  "version": "v2",
+  "subscriber": {
+    "id": 9990005,
+    "key": "wa.5585900000005",
+    "name": "Teste Eusebio",
+    "whatsapp_phone": "+5585900000005",
+    "last_input_text": "Vocês entregam no Eusébio?"
+  }
+}

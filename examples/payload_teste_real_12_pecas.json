@@ -1,0 +1,11 @@
+{
+  "_comentario": "Teste real: cliente pergunta preco para 12 pecas de tatame",
+  "version": "v2",
+  "subscriber": {
+    "id": 9990004,
+    "key": "wa.5585900000004",
+    "name": "Teste 12 Pecas",
+    "whatsapp_phone": "+5585900000004",
+    "last_input_text": "Quanto fica 12 peças de tatame?"
+  }
+}

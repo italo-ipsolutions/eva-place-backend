@@ -1,0 +1,11 @@
+{
+  "_comentario": "Teste real: cliente pergunta valor do frete (nao deve repetir resposta de produto anterior)",
+  "version": "v2",
+  "subscriber": {
+    "id": 9990002,
+    "key": "wa.5585900000002",
+    "name": "Teste Frete",
+    "whatsapp_phone": "+5585900000002",
+    "last_input_text": "Qual o valor do frete?"
+  }
+}

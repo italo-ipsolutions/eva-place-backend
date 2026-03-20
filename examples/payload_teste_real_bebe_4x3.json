@@ -1,0 +1,11 @@
+{
+  "_comentario": "Teste real: cliente quer tatame pro bebe e informa dimensoes do espaco",
+  "version": "v2",
+  "subscriber": {
+    "id": 9990001,
+    "key": "wa.5585900000001",
+    "name": "Teste Bebe 4x3",
+    "whatsapp_phone": "+5585900000001",
+    "last_input_text": "Quero tatame pro meu bebê, meu espaço tem 4x3"
+  }
+}

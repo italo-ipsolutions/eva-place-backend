@@ -10,6 +10,7 @@ import { findProduct, buildProductReply } from "../lib/catalog.js";
 import { handleWithAI, buildFallbackReply } from "../lib/rules.js";
 import { transcribeAudio, analyzeImage } from "../lib/media.js";
 import { isOpenAIConfigured } from "../lib/openai-client.js";
+import { detectIntent } from "../lib/intent.js";
 
 export async function manychatRoutes(app: FastifyInstance) {
   // Hook de autenticacao para todos os webhooks
@@ -20,7 +21,7 @@ export async function manychatRoutes(app: FastifyInstance) {
   });
 
   app.post("/webhooks/manychat/inbound", async (req, reply) => {
-    // Log do payload bruto para inspecao (truncado para nao logar dados excessivos)
+    // Log do payload bruto para inspecao
     const rawBody = req.body as Record<string, unknown>;
     logInfo("webhook_raw_payload", {
       has_subscriber: !!rawBody.subscriber,
@@ -92,34 +93,78 @@ export async function manychatRoutes(app: FastifyInstance) {
       addUserTurn(subId, message, "text");
     }
 
-    // --- TEXTO: pipeline ---
+    // --- TEXTO: pipeline com classificacao de intencao ---
     if (!message) {
       return reply.status(400).send({ error: "Payload sem message, audio_url ou image_url" });
     }
 
     logInbound(subId, "text", message);
 
+    // Classificar intencao ANTES de rodar matchers
+    const intent = detectIntent(message);
+    logInfo("intent_detected", {
+      subscriber_id: subId,
+      primary: intent.primary,
+      confidence: intent.confidence,
+      useCase: intent.useCase,
+      hasDimensions: !!intent.dimensions,
+      quantity: intent.quantity,
+      suggestedThicknessMm: intent.suggestedThicknessMm,
+    });
+
     let response: ManyChatResponse | null = null;
 
-    // 1. Frete
-    if (isFreteQuestion(message)) {
-      response = buildFreteReply(message);
-    }
+    // ---- Pipeline baseado em intencao ----
 
-    // 2. FAQ
-    if (!response) {
-      response = matchFaq(message);
-    }
-
-    // 3. Catalogo
-    if (!response) {
+    if (intent.primary === "frete") {
+      // Intencao clara de frete: roda SÓ frete, sem catálogo (evita contaminacao)
+      if (isFreteQuestion(message)) {
+        response = buildFreteReply(message);
+      }
+      // Se frete nao resolveu, FAQ pode ter algo relevante
+      if (!response) {
+        response = matchFaq(message);
+      }
+    } else if (intent.primary === "produto") {
+      // Intencao de produto: catalogo primeiro, com contexto de intencao
       const product = findProduct(message);
       if (product) {
-        response = buildProductReply(product);
+        response = buildProductReply(product, intent);
+      }
+      // FAQ pode ter info complementar (durabilidade, limpeza, etc)
+      if (!response) {
+        response = matchFaq(message);
+      }
+    } else if (intent.primary === "pagamento") {
+      // Pagamento: FAQ primeiro (desconto pix, parcelas, etc)
+      response = matchFaq(message);
+    } else if (intent.primary === "saudacao") {
+      // Saudacao simples: resposta curta sem acionar matchers
+      response = {
+        reply: "Opa! Tudo bem? 😊 Sou o assistente da EVA PLACE! Como posso te ajudar hoje?",
+        action: "reply",
+        _debug: { matched_intent: "saudacao", source: "rules", confidence: "high" },
+      };
+    } else {
+      // Geral: pipeline completo na ordem padrao
+      // 1. Frete
+      if (isFreteQuestion(message)) {
+        response = buildFreteReply(message);
+      }
+      // 2. FAQ
+      if (!response) {
+        response = matchFaq(message);
+      }
+      // 3. Catalogo
+      if (!response) {
+        const product = findProduct(message);
+        if (product) {
+          response = buildProductReply(product, intent);
+        }
       }
     }
 
-    // 4. OpenAI (com historico do lead)
+    // 4. OpenAI (com historico do lead) — para TODAS as intencoes nao resolvidas
     if (!response) {
       response = await handleWithAI(message, subId);
     }

@@ -12,8 +12,27 @@ function normalize(text: string): string {
 /** Detecta se a mensagem é sobre frete */
 export function isFreteQuestion(message: string): boolean {
   const q = normalize(message);
-  const terms = ["frete", "entrega", "envio", "motoboy", "carro", "retirada", "retirar", "buscar", "zona", "quanto custa a entrega", "taxa de entrega"];
-  return terms.some((t) => q.includes(t));
+
+  // Termos diretos
+  const directTerms = [
+    "frete", "entrega", "envio", "motoboy", "retirada", "retirar", "buscar",
+  ];
+  if (directTerms.some((t) => q.includes(t))) return true;
+
+  // Frases compostas sobre frete/entrega
+  const frasesFrete = [
+    /\bvalor\s*(da|do|de)?\s*(entrega|frete)\b/,
+    /\bquanto\s*(custa|e|fica|sai)\s*(a|o)?\s*(entrega|frete)\b/,
+    /\bqual\s*(e|o)?\s*(valor|preco|custo)\s*(da|do|de)?\s*(entrega|frete)\b/,
+    /\bpreco\s*(da|do|de)?\s*(entrega|frete)\b/,
+    /\bcusto\s*(da|do|de)?\s*(entrega|frete)\b/,
+    /\btaxa\s*(de)?\s*entrega\b/,
+    /\bentreg(a|am)\s+(em|pra|para|no|na)\b/,
+    /\bzona\s*(de)?\s*(frete|entrega)\b/,
+  ];
+  if (frasesFrete.some((r) => r.test(q))) return true;
+
+  return false;
 }
 
 /** Detecta cidade mencionada e retorna zona */
