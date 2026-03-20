@@ -83,29 +83,66 @@ function extractTags(raw: ManyChatRawFlat): string[] | undefined {
 }
 
 /**
+ * Campos que o ManyChat persiste de respostas anteriores do backend.
+ * Se nao forem removidos, contaminam a interpretacao da mensagem atual
+ * (causam 1-turn delay, respostas antigas reaparecendo, contexto misturado).
+ *
+ * NUNCA usar esses campos como entrada para o pipeline de IA.
+ */
+const CONTAMINATING_FIELDS: Set<string> = new Set([
+  "backend_reply",
+  "resposta_do_robo",
+  "eva_mensagem_recebida",
+  // Variantes comuns (ManyChat pode criar nomes levemente diferentes)
+  "backend_response",
+  "ultima_resposta",
+  "bot_reply",
+  "bot_response",
+]);
+
+/**
  * Extrai custom_fields como Record<string, string|number|null>.
  * ManyChat nativo pode enviar como array de { name, value } ou como objeto.
+ *
+ * **Sanitizacao:** Remove campos contaminantes (respostas antigas persistidas
+ * pelo ManyChat) antes de retornar. Loga quando campos sao removidos.
  */
 function extractCustomFields(raw: ManyChatRawFlat): Record<string, string | number | null> | undefined {
   if (!raw.custom_fields) return undefined;
 
+  let result: Record<string, string | number | null> = {};
+
   // Se ja for objeto plano
   if (!Array.isArray(raw.custom_fields)) {
-    const result: Record<string, string | number | null> = {};
     for (const [k, v] of Object.entries(raw.custom_fields)) {
       result[k] = v === null || v === undefined ? null : typeof v === "number" ? v : String(v);
     }
-    return Object.keys(result).length > 0 ? result : undefined;
-  }
-
-  // Se for array de { name, value }
-  const result: Record<string, string | number | null> = {};
-  for (const item of raw.custom_fields) {
-    if (typeof item === "object" && item !== null && typeof item.name === "string") {
-      const v = item.value;
-      result[item.name] = v === null || v === undefined ? null : typeof v === "number" ? v : String(v);
+  } else {
+    // Se for array de { name, value }
+    for (const item of raw.custom_fields) {
+      if (typeof item === "object" && item !== null && typeof item.name === "string") {
+        const v = item.value;
+        result[item.name] = v === null || v === undefined ? null : typeof v === "number" ? v : String(v);
+      }
     }
   }
+
+  // --- Sanitizacao: remover campos contaminantes ---
+  const stripped: string[] = [];
+  for (const key of Object.keys(result)) {
+    if (CONTAMINATING_FIELDS.has(key)) {
+      stripped.push(key);
+      delete result[key];
+    }
+  }
+
+  if (stripped.length > 0) {
+    logWarn("manychat_parser_sanitized_custom_fields", {
+      stripped_fields: stripped,
+      reason: "Campos de resposta antiga removidos para evitar contaminacao de contexto",
+    });
+  }
+
   return Object.keys(result).length > 0 ? result : undefined;
 }
 
