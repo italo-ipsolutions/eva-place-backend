@@ -2,6 +2,7 @@
 
 Backend de atendimento automatizado da EVA PLACE via WhatsApp.
 Matchers locais + OpenAI + memoria curta por lead.
+**Catalogo sincronizado do WooCommerce** (fonte oficial de precos/cores/estoque).
 
 **Repositorio pronto para deploy na Hostinger via GitHub import.**
 Subdominio: `api.evaplace.com.br`
@@ -111,7 +112,29 @@ curl -s -X POST http://localhost:3100/webhooks/manychat/inbound \
 | `OPENAI_TEXT_MODEL` | Nao | Modelo de texto (default: gpt-4o-mini) |
 | `OPENAI_TRANSCRIBE_MODEL` | Nao | Modelo de transcricao (default: gpt-4o-mini-transcribe) |
 | `WEBHOOK_SECRET` | Sim (prod) | Secret de autenticacao do webhook |
+| `WOOCOMMERCE_BASE_URL` | Sim (sync) | URL base do WooCommerce (ex: https://evaplace.com.br) |
+| `WOOCOMMERCE_CONSUMER_KEY` | Sim (sync) | Consumer Key da REST API |
+| `WOOCOMMERCE_CONSUMER_SECRET` | Sim (sync) | Consumer Secret da REST API |
 | `NODE_ENV` | Nao | production ou development |
+
+## Sincronizacao WooCommerce (fonte de verdade)
+
+O catalogo de produtos (`BACKEND_BASE/catalogo_produtos.json`) e gerado automaticamente
+a partir do WooCommerce REST API. **WooCommerce e a unica fonte oficial de precos, cores e estoque.**
+
+```bash
+# Sincronizar catalogo (puxa do WooCommerce e salva)
+npm run sync:catalog
+
+# Ver diferencas antes de salvar
+npm run sync:catalog:diff
+
+# Simular sem salvar
+npm run sync:catalog:dry
+```
+
+> **NAO editar `catalogo_produtos.json` manualmente.** Sempre rodar `npm run sync:catalog`.
+> Documentacao completa: `ops/woocommerce-sync.md`
 
 ## Deploy na Hostinger (via GitHub)
 

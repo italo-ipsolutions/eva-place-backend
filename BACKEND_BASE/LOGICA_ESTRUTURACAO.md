@@ -66,10 +66,19 @@ Os dados foram divididos em 5 JSONs distintos para que o backend possa carregar 
 6. **Fluxo de pos-venda** - nao descrito nos documentos atuais
 7. **Cores de tatame** - podem ter mudado desde a ultima atualizacao do Prompt Mestre
 
+## Fonte de verdade (atualizado 2026-03-20)
+
+A partir da v3.0.0, o `catalogo_produtos.json` e gerado automaticamente pelo
+script `scripts/sync-catalog.ts` que puxa dados do WooCommerce REST API.
+
+**WooCommerce e a fonte oficial para:** precos, cores, estoque, SKU, variantes.
+**Regras locais continuam validas para:** argumentacao comercial, uso recomendado,
+restricoes, frete, tabela de kits (calculada sobre preco avulso do Woo).
+
+NAO editar `catalogo_produtos.json` manualmente. Rodar `npm run sync:catalog`.
+
 ## Proximos passos recomendados
 
 1. Validar todas as lacunas `pendente_validacao` com a equipe
-2. Definir estrutura do backend (Node.js? Python? endpoints?)
-3. Configurar ManyChat com os campos e tags definidos
-4. Construir o fluxo de integracao ManyChat -> Backend -> OpenAI
-5. Testar com os 3 cenarios de simulacao do Modulo 5
+2. Agendar `npm run sync:catalog` como parte do deploy
+3. Monitorar produtos novos no WooCommerce que nao tem mapeamento no bot

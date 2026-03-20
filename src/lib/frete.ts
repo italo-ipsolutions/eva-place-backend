@@ -111,13 +111,15 @@ export function buildFreteReply(message: string): ManyChatResponse {
     };
   }
 
-  // Genérico sobre frete
+  // Genérico sobre frete — lê zonas do regras_frete.json (sem hardcode)
+  const zonasResumo = ctx.frete.zonas
+    .map((z) => `👉 ${z.cidades.join("/")}: R$ ${z.valor.toFixed(0)} (${z.tipo_padrao})`)
+    .join("\n");
+
   return {
     reply: [
       `Nosso frete e por zona:`,
-      `👉 Fortaleza/Maracanau: R$ 10`,
-      `👉 Maranguape/Eusebio: R$ 20`,
-      `👉 Aquiraz/Caucaia: R$ 30`,
+      zonasResumo,
       `👉 Retirada na loja: Gratis!`,
       ``,
       `Qual sua cidade/bairro?`,

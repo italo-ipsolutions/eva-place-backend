@@ -6,6 +6,19 @@ Contém os dados estruturados que alimentam o backend de atendimento automatizad
 
 **Esta pasta NAO e o backend.** E a base de contexto que o backend vai consumir.
 
+## Fonte de verdade
+
+| Tipo de dado | Fonte oficial | Arquivo |
+|-------------|---------------|---------|
+| Produtos, precos, cores, estoque | **WooCommerce REST API** | `catalogo_produtos.json` (gerado por `scripts/sync-catalog.ts`) |
+| Zonas de frete, valores | Regras locais | `regras_frete.json` |
+| Perguntas frequentes | Regras locais | `faq.json` |
+| Parcelamento, desconto, persona | Regras locais | `regras_negocio.json` |
+| Campos ManyChat (referencia) | Configuracao | `campos_tags_manychat.json` |
+
+> **IMPORTANTE:** `catalogo_produtos.json` NAO deve ser editado manualmente.
+> Para atualizar precos/cores/estoque, rodar `npm run sync:catalog` que puxa do WooCommerce.
+
 ## Arquitetura da operacao
 
 ```
@@ -13,43 +26,26 @@ Trafego Pago (Meta) -> WhatsApp -> ManyChat (interface)
                                        |
                                   Backend proprio (nucleo)
                                        |
-                                  OpenAI (inteligencia: texto, audio, imagem)
-                                       |
-                                  Base de Contexto (esta pasta)
+                               +-------+--------+
+                               |                |
+                          OpenAI            WooCommerce
+                       (inteligencia)    (catalogo/precos)
+                               |                |
+                          Base de Contexto (esta pasta)
 ```
 
 ## Arquivos
 
-| Arquivo | Conteudo |
-|---------|----------|
-| `catalogo_produtos.json` | Todos os produtos, precos, cores, variantes, restricoes e argumentos comerciais |
-| `regras_frete.json` | Zonas, cidades, valores, protocolo moto vs carro, regras fora da regiao |
-| `faq.json` | Perguntas frequentes com respostas, categoria e se resolve automaticamente |
-| `regras_negocio.json` | Desconto pix, parcelamento, fatores, fechamento, persona, horarios, escalamento |
-| `campos_tags_manychat.json` | Custom fields, tags e etapas do fluxo sugeridos para ManyChat |
-| `LOGICA_ESTRUTURACAO.md` | Decisoes tomadas na estruturacao e criterios usados |
-
-## Praca de operacao
-
-- **Cidade:** Fortaleza e regiao metropolitana (Grande Fortaleza)
-- **Zonas:** Fortaleza/Maracanau (R$10), Maranguape/Eusebio (R$20), Aquiraz/Caucaia (R$30)
-- **Fora da regiao:** Redirecionar para o site (transportadora/Correios)
+| Arquivo | Conteudo | Fonte |
+|---------|----------|-------|
+| `catalogo_produtos.json` | Produtos, precos, cores, estoque | WooCommerce (sincronizado) |
+| `regras_frete.json` | Zonas, cidades, valores, protocolo moto vs carro | Regras locais |
+| `faq.json` | Perguntas frequentes | Regras locais |
+| `regras_negocio.json` | Desconto pix, parcelamento, persona, horarios | Regras locais |
+| `campos_tags_manychat.json` | Custom fields e tags sugeridos para ManyChat | Configuracao |
 
 ## Status
 
-- **Fase:** 1 - Estruturacao da base de contexto
-- **Proximo passo:** Construcao do backend que consome estes JSONs
-- **Lacunas:** Marcadas como `pendente_validacao` dentro dos JSONs
-
-## Fonte dos dados
-
-- `00_PROMPT_MESTRE_CONSOLIDADO.docx`
-- `01_MOD_Identidade_e_Logistica.docx`
-- `02_MOD_Catalogo_Produtos_COMPLETO.docx`
-- `03_MOD_Financeiro_e_Fechamento.docx`
-- `04_MOD_Formatacao_e_UX.docx`
-- `05_MOD_Cenarios_de_Teste.docx`
-
-## Regra importante
-
-Nenhum dado foi inventado. Onde havia lacuna ou desatualizacao, foi marcado explicitamente como `pendente_validacao`.
+- **Catalogo:** v3.0.0 — sincronizado do WooCommerce (32 produtos, 175 variacoes)
+- **Ultima sync:** ver campo `sincronizado_em` no `_meta` do catalogo
+- **Para re-sincronizar:** `npm run sync:catalog`

@@ -66,9 +66,10 @@
     {
       "id": "faq_009",
       "pergunta": "O tatame de 20mm serve para Jiu-Jitsu?",
-      "resposta_curta": "NAO recomendado. Pra artes marciais com quedas, o minimo seguro e o de 30mm (R$ 109). O profissional e o de 40mm (R$ 145).",
+      "resposta_curta": "NAO recomendado. Pra artes marciais com quedas, o minimo seguro e o de 30mm. O profissional e o de 40mm. Consulte precos atualizados no catalogo.",
       "categoria": "seguranca_produto",
-      "resolve_automaticamente": true
+      "resolve_automaticamente": true,
+      "_nota": "Precos removidos desta FAQ para evitar desatualizacao. O bot usa catalogo_produtos.json (sincronizado do WooCommerce) como fonte de preco."
     },
     {
       "id": "faq_010",
