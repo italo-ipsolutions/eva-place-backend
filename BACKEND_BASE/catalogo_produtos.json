@@ -1,15 +1,15 @@
 {
   "_meta": {
-    "versao": "1.0.0",
-    "fonte": "00_PROMPT_MESTRE_CONSOLIDADO + 02_MOD_Catalogo_Produtos_COMPLETO",
-    "data_extracao": "2026-03-18",
-    "notas": "Dados extraidos do Prompt Mestre. Precos e cores sujeitos a pendente_validacao conforme marcado."
+    "versao": "2.0.0",
+    "fonte": "Bling API v3 — itens_pedido_90dias (dez/2025-mar/2026) + Prompt Mestre",
+    "data_atualizacao": "2026-03-20",
+    "notas": "Precos corrigidos com base em 770 itens vendidos nos ultimos 90 dias. Campos marcados pendente_validacao ainda precisam de confirmacao manual."
   },
   "categorias": [
     {
       "id": "tatame_50x50",
       "nome": "Tatame EVA 50x50cm",
-      "descricao": "Carro-chefe da loja. Preco regressivo por quantidade.",
+      "descricao": "Carro-chefe da loja. Preco regressivo por quantidade. Vendido como 'Monte seu Kit' no site.",
       "regra_quantidade": "Se o cliente pedir quantidade que nao e kit fechado (ex: 7), somar Kit inferior + avulsas ou sugerir Kit superior.",
       "variantes": [
         {
@@ -30,10 +30,11 @@
             "Branco", "Rosa BB", "Rosa", "Rosa Fluor", "Lilas BB", "Lilas",
             "Azul Ciano", "Azul BB", "Azul", "Verde BB", "Verde Grama",
             "Verde Bandeira", "Amarelo BB", "Amarelo", "Laranja", "Cenoura",
-            "Vermelho", "Marrom", "Preto"
+            "Vermelho", "Marrom", "Preto", "Cinza"
           ],
           "cores_em_falta": ["Azul Marinho", "Laranja BB", "Lavanda"],
-          "restricoes": []
+          "restricoes": [],
+          "validacao": "Precos por peca confirmados via Bling (690 un vendidas). Cores com venda confirmada: AM, AMBB, AZ, AZBB, AZC, BR, BRF, CN, LBB, LL, LR, MR, PT, RBB, RS."
         },
         {
           "espessura_mm": 15,
@@ -50,14 +51,13 @@
             { "faixa": "Kit 20+", "preco_total": null, "preco_unitario": 14.00, "nota": "Qtd x R$ 14,00" }
           ],
           "cores_disponiveis": [
-            "Rosa BB", "Rosa Fluor", "Lilas", "Azul Ciano", "Azul BB", "Azul",
-            "Verde BB", "Verde Grama", "Verde Bandeira", "Cenoura", "Vermelho"
+            "Rosa BB", "Rosa Fluor", "Lilas", "Lilas BB", "Azul Ciano", "Azul BB", "Azul",
+            "Verde BB", "Verde Grama", "Verde Bandeira", "Cenoura", "Vermelho",
+            "Amarelo", "Amarelo BB", "Branco", "Cinza", "Laranja", "Marrom"
           ],
-          "cores_em_falta": [
-            "Preto", "Marrom", "Branco", "Amarelo", "Azul Marinho",
-            "Laranja", "Lavanda", "Lilas BB", "Rosa"
-          ],
-          "restricoes": []
+          "cores_em_falta": ["Azul Marinho", "Lavanda"],
+          "restricoes": [],
+          "validacao": "Precos confirmados via Bling (474 un). WooCommerce pratica R$ 16,90 avulso (diferenca de R$ 0,10). Cores expandidas: AM, AMBB, AZ, AZBB, AZCI, BR, CN, CZ, LJ, LL, LLBB, LR, MR."
         },
         {
           "espessura_mm": 20,
@@ -74,14 +74,16 @@
             { "faixa": "Kit 20+", "preco_total": null, "preco_unitario": 18.67, "nota": "Qtd x R$ 18,67" }
           ],
           "cores_disponiveis": [
-            "Rosa BB", "Rosa", "Rosa Fluor", "Lilas", "Azul Ciano", "Azul BB",
-            "Verde BB", "Verde Grama", "Verde Bandeira", "Amarelo", "Cenoura"
+            "Rosa BB", "Rosa", "Rosa Pink", "Rosa Fluor", "Lilas", "Lilas BB",
+            "Azul Ciano", "Azul BB", "Azul", "Azul Marinho", "Azul Royal",
+            "Verde BB", "Verde Grama", "Verde Bandeira", "Verde Militar", "Verde Agua",
+            "Amarelo", "Amarelo BB", "Laranja", "Cenoura",
+            "Branco", "Beringela", "Salmon", "Cinza"
           ],
-          "cores_em_falta": [
-            "Preto", "Vermelho", "Branco", "Azul", "Azul Marinho",
-            "Laranja", "Lavanda", "Lilas BB", "Marrom"
-          ],
-          "restricoes": []
+          "cores_em_falta": ["Lavanda"],
+          "restricoes": [],
+          "nota_marca": "Existem duas linhas: padrao (MX/MAX) e linha NB. Linha NB tem preco menor (a partir de R$ 14/un), mas e o mesmo produto. Informar preco padrao ao cliente, e mencionar linha NB se pedir desconto.",
+          "validacao": "Precos confirmados via Bling (485 un). Linha NB vende a R$ 12-14 (avulso) e R$ 20,30-22 (kits). Linha MX/MAX idem tabela padrao. Cores expandidas com Verde Militar, Beringela, Salmon, Verde Agua, Cinza, Rosa Pink, Azul Royal."
         }
       ]
     },
@@ -95,28 +97,32 @@
           "espessura_mm": 10,
           "preco_unitario": 35.00,
           "uso_recomendado": "Area baby, forrar chao frio",
-          "cores_disponiveis": ["Amarelo", "Azul", "Azul BB", "Laranja", "Lilas", "Preto", "Rosa", "Verde Bandeira", "Verde Grama", "Vermelho"],
+          "cores_disponiveis": ["Amarelo", "Azul", "Azul Royal", "Laranja", "Lilas", "Preto", "Rosa", "Rosa BB", "Verde Bandeira", "Verde Escuro", "Verde Grama", "Vermelho"],
           "cores_em_falta": [],
           "restricoes": [],
-          "frete_especial": "MOTO ate 10 un. Acima disso alerta sobre volume."
+          "frete_especial": "MOTO ate 10 un. Acima disso alerta sobre volume.",
+          "nota_marca": "Linha NB existe a R$ 25,00/un. Preco padrao R$ 35,00.",
+          "validacao": "Confirmado via Bling (84 un). Precos praticados: R$ 25 (NB), R$ 35 (padrao), R$ 39,90 (WooCommerce). Usar R$ 35 como referencia WhatsApp."
         },
         {
           "espessura_mm": 20,
-          "preco_unitario": 70.00,
+          "preco_unitario": 65.00,
           "uso_recomendado": "Pilates, funcional, area escolar",
-          "cores_disponiveis": ["Amarelo", "Azul", "Laranja", "Preto", "Rosa", "Verde Bandeira", "Vermelho"],
+          "cores_disponiveis": ["Amarelo", "Azul", "Azul Royal", "Laranja", "Preto", "Rosa", "Verde Escuro", "Vermelho"],
           "cores_em_falta": [],
           "restricoes": ["NAO recomendado para artes marciais com quedas"],
-          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica."
+          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica.",
+          "validacao": "CORRIGIDO: era R$ 70, preco real confirmado R$ 65 (50 un vendidas). Bling mostra: R$ 65 (mais comum), R$ 67,90, R$ 70 (pontual). Usando R$ 65 como preco de referencia."
         },
         {
           "espessura_mm": 30,
           "preco_unitario": 109.00,
           "uso_recomendado": "Jiu-Jitsu infantil, Karate, Judo iniciante",
-          "cores_disponiveis": ["Azul", "Preto", "Vermelho"],
+          "cores_disponiveis": ["Azul", "Azul Royal", "Preto", "Vermelho"],
           "cores_em_falta": [],
           "restricoes": ["Minimo seguro para treino de luta"],
-          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica."
+          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica.",
+          "validacao": "Confirmado via Bling (27 un). Precos praticados: R$ 90 (pontual), R$ 99,90 (WooCommerce), R$ 109 (padrao), R$ 121 (pontual). Usando R$ 109 como preco WhatsApp."
         },
         {
           "espessura_mm": 40,
@@ -125,7 +131,8 @@
           "cores_disponiveis": ["Azul", "Preto", "Vermelho"],
           "cores_em_falta": [],
           "restricoes": [],
-          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica."
+          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica.",
+          "validacao": "Confirmado via Bling (4 un vendidas a R$ 145). Preco correto."
         }
       ]
     },
@@ -144,7 +151,8 @@
           "area_total_m2": 2.34,
           "area_descricao": "Retangulo grande",
           "argumento_comercial": "Ensina todas as letras! Cobre uma area otima no quarto e a crianca aprende encaixando.",
-          "preco": 139.00
+          "preco": 139.00,
+          "validacao": "Confirmado via Bling (3 un a R$ 139). Correto."
         },
         {
           "modelo": "Numeros (0-9)",
@@ -152,7 +160,8 @@
           "area_total_m2": 0.90,
           "area_descricao": "Quadrado 3x3",
           "argumento_comercial": "Ideal para aprender a contar. Os numeros saem da peca.",
-          "preco": 55.00
+          "preco": 55.00,
+          "validacao": "Confirmado via Bling (6 un a R$ 55). Correto."
         },
         {
           "modelo": "Animais",
@@ -160,7 +169,8 @@
           "area_total_m2": 0.81,
           "area_descricao": "90x90cm",
           "argumento_comercial": "Bichinhos destacaveis. Estimula a fala e sons dos animais.",
-          "preco": 49.00
+          "preco": 49.00,
+          "validacao": "Confirmado via Bling (5 un a R$ 49). Correto."
         },
         {
           "modelo": "Geometrico",
@@ -168,7 +178,8 @@
           "area_total_m2": 0.81,
           "area_descricao": "90x90cm",
           "argumento_comercial": "Formas (quadrado, triangulo). Otimo para logica.",
-          "preco": 49.00
+          "preco": 49.00,
+          "validacao": "Nao apareceu vendas nos 90 dias. Manter preco do Prompt Mestre. pendente_validacao."
         },
         {
           "modelo": "Objetos",
@@ -176,7 +187,8 @@
           "area_total_m2": 0.81,
           "area_descricao": "90x90cm",
           "argumento_comercial": "Desenhos de brinquedos/transportes. Quebra-cabeca gigante.",
-          "preco": 49.00
+          "preco": 49.00,
+          "validacao": "Confirmado via Bling (3 un a R$ 49). Correto."
         },
         {
           "modelo": "Amarelinha",
@@ -184,7 +196,8 @@
           "area_total_m2": null,
           "area_descricao": "Caminho Linear",
           "argumento_comercial": "Monta e desmonta. A crianca constroi a propria amarelinha.",
-          "preco": 69.00
+          "preco": 69.00,
+          "validacao": "Confirmado via Bling (4 un a R$ 69). Correto."
         },
         {
           "modelo": "Arco-Iris",
@@ -192,7 +205,8 @@
           "area_total_m2": null,
           "area_descricao": "30x30 - Brinquedo 3D",
           "argumento_comercial": "NAO e piso. E brinquedo de mesa para montar tuneis e pontes.",
-          "preco": 38.90
+          "preco": 38.90,
+          "validacao": "Bling mostra R$ 34 e R$ 38,90. Manter R$ 38,90 como preco oficial."
         }
       ]
     },
@@ -206,21 +220,24 @@
           "tamanho": "2,00m x 1,00m",
           "espessura_mm": 5,
           "argumento_comercial": "Tapetao com ruas para brincar de carrinho.",
-          "preco": 99.00
+          "preco": 99.00,
+          "validacao": "Confirmado via Bling (2 un a R$ 99). Correto."
         },
         {
           "modelo": "Mesversario",
           "tamanho": "2,00m x 1,00m",
           "espessura_mm": 5,
           "argumento_comercial": "Cenario com regua de meses para fotos do bebe.",
-          "preco": 99.00
+          "preco": 99.00,
+          "validacao": "pendente_validacao: nao apareceu vendas nos 90 dias com descricao exata. Manter preco."
         },
         {
           "modelo": "Amarelinha Rolo",
           "tamanho": "1,70m x 0,60m",
           "espessura_mm": 5,
           "argumento_comercial": "Ja vem pronta, so desenrolar e pular.",
-          "preco": 59.00
+          "preco": 59.00,
+          "validacao": "Bling mostra R$ 59 e R$ 79. Manter R$ 59 como preco base. pendente_validacao: R$ 79 pode ser tamanho maior."
         }
       ]
     },
@@ -233,13 +250,15 @@
           "modelo": "Saco de Letras",
           "qtd_pecas": 107,
           "argumento_comercial": "Letras soltas para mesa.",
-          "preco": 14.90
+          "preco": 14.90,
+          "validacao": "Bling mostra R$ 12 e R$ 14,90. Manter R$ 14,90 como preco oficial."
         },
         {
           "modelo": "Pote de Letras",
           "qtd_pecas": 138,
           "argumento_comercial": "Vem no pote organizador.",
-          "preco": 36.90
+          "preco": 36.90,
+          "validacao": "Bling mostra R$ 32 e R$ 36,90. Manter R$ 36,90 como preco oficial."
         }
       ]
     },
@@ -256,13 +275,16 @@
         { "modelo": "Vogais", "argumento": "Para criancas comecando a ler." },
         { "modelo": "Corpo Humano", "argumento": "Esqueleto montavel simples." },
         { "modelo": "Mapa do Brasil", "argumento": "Mapa colorido com os estados." },
-        { "modelo": "Mapa da Regiao Sul", "argumento": "Focado na geografia da regiao Sul." },
         { "modelo": "Resta Um", "argumento": "Jogo de estrategia individual. Concentracao." },
         { "modelo": "Domino", "argumento": "Jogo tradicional. Associacao e contagem." },
         { "modelo": "Memoria", "argumento": "Jogo da memoria em EVA. Duravel." },
         { "modelo": "Dama / Trilha", "argumento": "Dois jogos em um. Raciocinio logico." },
-        { "modelo": "Relogio / Profissoes", "argumento": "Ensina a ver horas ou identificar profissoes.", "nota": "pendente_validacao: verificar estoque visual" }
-      ]
+        { "modelo": "Meses e Estacoes", "argumento": "Calendario didatico com estacoes do ano." },
+        { "modelo": "Soma e Diversao", "argumento": "Matematica basica de forma ludica." },
+        { "modelo": "Profissoes", "argumento": "Identificar profissoes e uniformes." },
+        { "modelo": "Triangulos", "argumento": "Formas geometricas para montar." }
+      ],
+      "validacao": "Confirmado R$ 5,00 via Bling (48 un vendidas). Modelos expandidos com base em codigos Bling (MES, PROF, SOM, TRI, DIV, DDS, DOM, JDV, TART, VOG)."
     },
     {
       "id": "yoga_mat",
@@ -275,7 +297,8 @@
           "preco": 49.00,
           "diferencial": "Acompanha alca de transporte. Antiderrapante.",
           "cores_disponiveis": ["Amarelo", "Azul", "Laranja", "Preto", "Verde Grama"],
-          "restricoes": ["Nao usar tenis abrasivo", "Limpar com pano umido"]
+          "restricoes": ["Nao usar tenis abrasivo", "Limpar com pano umido"],
+          "validacao": "Confirmado via Bling (9 un a R$ 49). Correto."
         }
       ]
     },
@@ -290,7 +313,8 @@
           "preco": 12.00,
           "diferencial": "Adesivo de alta fixacao. Instalacao facil.",
           "cores_disponiveis": ["Amarelo", "Azul", "Cinza", "Preto", "Vermelho"],
-          "restricoes": ["Parede limpa e seca para o adesivo pegar"]
+          "restricoes": ["Parede limpa e seca para o adesivo pegar"],
+          "validacao": "Confirmado via Bling (39 un a R$ 12). Correto. Produto de alto giro."
         }
       ]
     },
@@ -301,7 +325,8 @@
         { "modelo": "Pequeno", "tamanho": "60x30cm", "altura_cm": 10, "preco": 119.90, "cor": "Azul com Preto" },
         { "modelo": "Grande", "tamanho": "80x30cm", "altura_cm": 10, "preco": 199.90, "cor": "Azul com Preto" },
         { "modelo": "Grande Alto", "tamanho": "80x30cm", "altura_cm": 14, "preco": 279.90, "cor": "Azul com Preto" }
-      ]
+      ],
+      "validacao": "pendente_validacao: nenhuma venda nos 90 dias no Bling. Manter precos do Prompt Mestre."
     },
     {
       "id": "flutuante",
@@ -312,14 +337,16 @@
           "modelo": "1x1m",
           "espessura_mm": 30,
           "preco": 139.90,
-          "cores_disponiveis": ["Amarelo", "Azul", "Lilas", "Vermelho"]
+          "cores_disponiveis": ["Amarelo", "Azul", "Lilas", "Vermelho"],
+          "validacao": "Confirmado via Bling (15 un a R$ 139,90). Correto."
         },
         {
           "modelo": "2x1m",
           "espessura_mm": 30,
           "preco": 239.90,
           "nota": "Cabe adulto deitado",
-          "cores_disponiveis": ["Amarelo", "Azul", "Lilas", "Vermelho"]
+          "cores_disponiveis": ["Amarelo", "Azul", "Lilas", "Vermelho"],
+          "validacao": "Confirmado via Bling (4 un a R$ 239,90). Correto. Uma venda pontual a R$ 281,20 (possivel bundle)."
         }
       ]
     },
@@ -332,7 +359,8 @@
           "tamanho": "42x28cm",
           "espessura_mm": 30,
           "preco": 29.90,
-          "cores_disponiveis": ["Azul", "Vermelho"]
+          "cores_disponiveis": ["Azul", "Vermelho"],
+          "validacao": "Confirmado via Bling (4 un a R$ 29,90). Correto."
         }
       ]
     },
@@ -344,7 +372,8 @@
           "modelo": "Protetor Porta",
           "funcao": "Evita prender o dedo na porta",
           "preco": 14.90,
-          "modelos_disponiveis": ["Joaninha", "Unicornio", "Vaquinha"]
+          "modelos_disponiveis": ["Joaninha", "Unicornio", "Vaquinha"],
+          "validacao": "Bling mostra R$ 12 e R$ 14,90. Manter R$ 14,90 como preco oficial."
         }
       ]
     }
