@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "versao": "1.0.0",
+    "fonte": "01_MOD_Identidade_e_Logistica",
+    "data_extracao": "2026-03-18",
+    "notas": "Frete define margem de lucro. Seguir logica rigorosa."
+  },
+  "area_atendimento": "Grande Fortaleza",
+  "canal": "WhatsApp via ManyChat",
+  "modalidades": {
+    "motoboy": "Entregas padrao para itens que cabem na bag",
+    "carro": "Para volumes grandes (tatame 1x1m 20mm+, grandes quantidades)"
+  },
+  "zonas": [
+    {
+      "zona": 1,
+      "valor": 10.00,
+      "cidades": ["Fortaleza", "Maracanau"],
+      "tipo_padrao": "MOTO"
+    },
+    {
+      "zona": 2,
+      "valor": 20.00,
+      "cidades": ["Maranguape", "Eusebio"],
+      "tipo_padrao": "MOTO"
+    },
+    {
+      "zona": 3,
+      "valor": 30.00,
+      "cidades": ["Aquiraz", "Caucaia"],
+      "tipo_padrao": "MOTO"
+    }
+  ],
+  "retirada": {
+    "valor": 0,
+    "endereco": "Rua das Jaqueiras, 652 - Mondubim",
+    "horario_semana": "Seg-Sex 8h-17h",
+    "horario_sabado": "Sab 8h-15h",
+    "domingo": "Fechado"
+  },
+  "protocolo_moto_vs_carro": [
+    {
+      "tipo_produto": "Miudezas / Tatame 50x50 / Rolos",
+      "frete": "MOTO",
+      "acao": "Aplica taxa fixa da Zona"
+    },
+    {
+      "tipo_produto": "Tatame 1x1m (10mm)",
+      "frete": "MOTO",
+      "condicao": "Ate 10 unidades",
+      "acao": "Aplica taxa fixa. Acima de 10, alertar sobre volume."
+    },
+    {
+      "tipo_produto": "Tatame 1x1m (20mm, 30mm, 40mm)",
+      "frete": "CARRO",
+      "acao": "NAO prometer valor fixo. Dizer que e volumoso e confirmar com logistica.",
+      "script": "Como esse material e grandao e volumoso (nao cabe na bag), talvez precise ir de carro. Vou confirmar a taxa exata com a logistica rapidinho."
+    }
+  ],
+  "fora_da_regiao": {
+    "acao": "PARAR a venda no WhatsApp",
+    "redirecionar_para": "site",
+    "script": "Amigo, pra sua regiao (fora da Grande Fortaleza), o frete mais barato e seguro e direto pelo nosso site! La ele calcula transportadora ou Correios automatico.",
+    "link_site": "pendente_validacao: inserir link exato do site"
+  },
+  "valor_frete_carro": "pendente_validacao: nao ha tabela fixa de preco de frete por carro no documento. Confirmar com logistica."
+}

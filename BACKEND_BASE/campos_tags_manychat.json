@@ -1,0 +1,206 @@
+{
+  "_meta": {
+    "versao": "1.0.0",
+    "fonte": "Derivado do fluxo de atendimento descrito nos Modulos 1 a 5",
+    "data_extracao": "2026-03-18",
+    "notas": "Estrutura sugerida para configuracao do ManyChat. Campos e tags devem ser validados antes de implementar no ManyChat real."
+  },
+  "custom_fields": [
+    {
+      "nome": "nome_completo",
+      "tipo": "text",
+      "descricao": "Nome completo do cliente",
+      "momento_coleta": "fechamento_passo_1"
+    },
+    {
+      "nome": "endereco_completo",
+      "tipo": "text",
+      "descricao": "Rua, Numero, Bairro, Complemento",
+      "momento_coleta": "fechamento_passo_1"
+    },
+    {
+      "nome": "cidade",
+      "tipo": "text",
+      "descricao": "Cidade do cliente (para definir zona de frete)",
+      "momento_coleta": "inicio_conversa ou fechamento"
+    },
+    {
+      "nome": "zona_frete",
+      "tipo": "number",
+      "descricao": "Zona de frete calculada (1, 2 ou 3)",
+      "momento_coleta": "automatico_baseado_cidade"
+    },
+    {
+      "nome": "valor_frete",
+      "tipo": "number",
+      "descricao": "Valor do frete aplicado",
+      "momento_coleta": "automatico_baseado_zona"
+    },
+    {
+      "nome": "telefone",
+      "tipo": "text",
+      "descricao": "Telefone do cliente",
+      "momento_coleta": "fechamento_passo_1"
+    },
+    {
+      "nome": "forma_pagamento",
+      "tipo": "text",
+      "descricao": "Pix, Dinheiro, Cartao Credito",
+      "momento_coleta": "fechamento_passo_2"
+    },
+    {
+      "nome": "valor_pedido",
+      "tipo": "number",
+      "descricao": "Valor total do pedido (produtos + frete, com desconto se aplicavel)",
+      "momento_coleta": "fechamento_passo_3"
+    },
+    {
+      "nome": "status_pagamento",
+      "tipo": "text",
+      "descricao": "PAGO ou COBRAR_NA_ENTREGA",
+      "momento_coleta": "fechamento_passo_3"
+    },
+    {
+      "nome": "produtos_pedido",
+      "tipo": "text",
+      "descricao": "Lista de produtos e quantidades do pedido (formato texto livre ou JSON)",
+      "momento_coleta": "fechamento_passo_4"
+    },
+    {
+      "nome": "cpf_cnpj",
+      "tipo": "text",
+      "descricao": "CPF ou CNPJ para emissao de NF (so quando solicitado)",
+      "momento_coleta": "quando_cliente_pedir_nf"
+    },
+    {
+      "nome": "precisa_troco",
+      "tipo": "text",
+      "descricao": "Valor para troco (se pagamento em dinheiro)",
+      "momento_coleta": "fechamento_cenario_dinheiro"
+    },
+    {
+      "nome": "tipo_frete",
+      "tipo": "text",
+      "descricao": "MOTO, CARRO ou RETIRADA",
+      "momento_coleta": "automatico_ou_manual"
+    },
+    {
+      "nome": "observacoes_pedido",
+      "tipo": "text",
+      "descricao": "Cor especifica, horario preferido, complemento etc.",
+      "momento_coleta": "durante_conversa"
+    }
+  ],
+  "tags": [
+    {
+      "tag": "lead_novo",
+      "descricao": "Cliente entrou pela primeira vez",
+      "trigger": "inicio_conversa"
+    },
+    {
+      "tag": "lead_qualificado",
+      "descricao": "Cliente demonstrou interesse em produto especifico",
+      "trigger": "perguntou_preco_ou_produto"
+    },
+    {
+      "tag": "em_negociacao",
+      "descricao": "Cliente esta no processo de fechamento",
+      "trigger": "inicio_fechamento"
+    },
+    {
+      "tag": "pedido_fechado",
+      "descricao": "Pedido confirmado e dados coletados",
+      "trigger": "resumo_final_gerado"
+    },
+    {
+      "tag": "pago_pix",
+      "descricao": "Comprovante Pix recebido",
+      "trigger": "comprovante_enviado"
+    },
+    {
+      "tag": "cobrar_entrega",
+      "descricao": "Pagamento sera na entrega (dinheiro ou cartao)",
+      "trigger": "forma_pagamento_definida"
+    },
+    {
+      "tag": "fora_da_regiao",
+      "descricao": "Cliente fora da Grande Fortaleza, redirecionado ao site",
+      "trigger": "cidade_fora_zona"
+    },
+    {
+      "tag": "frete_carro",
+      "descricao": "Pedido requer frete de carro (volume grande)",
+      "trigger": "protocolo_carro_ativado"
+    },
+    {
+      "tag": "escalar_humano",
+      "descricao": "Conversa precisa ser transferida para atendente humano",
+      "trigger": "qualquer_situacao_escalar"
+    },
+    {
+      "tag": "pediu_nf",
+      "descricao": "Cliente solicitou Nota Fiscal",
+      "trigger": "cliente_pediu_nf"
+    },
+    {
+      "tag": "retirada_loja",
+      "descricao": "Cliente vai retirar na loja",
+      "trigger": "escolheu_retirada"
+    },
+    {
+      "tag": "upsell_aceito",
+      "descricao": "Cliente aceitou sugestao de upsell (kit maior, miudeza etc)",
+      "trigger": "aceitou_sugestao"
+    },
+    {
+      "tag": "abandonou",
+      "descricao": "Cliente parou de responder durante negociacao",
+      "trigger": "timeout_sem_resposta",
+      "nota": "pendente_validacao: definir timeout exato (ex: 24h, 48h)"
+    }
+  ],
+  "etapas_fluxo": [
+    {
+      "etapa": 1,
+      "nome": "Boas-vindas / Identificacao de Necessidade",
+      "descricao": "Entender o que o cliente precisa. Perguntar uso/finalidade.",
+      "tags_aplicadas": ["lead_novo"]
+    },
+    {
+      "etapa": 2,
+      "nome": "Apresentacao de Produto + Consultoria",
+      "descricao": "Mostrar opcoes, recomendar espessura, fazer upsell de kit.",
+      "tags_aplicadas": ["lead_qualificado"]
+    },
+    {
+      "etapa": 3,
+      "nome": "Calculo de Frete",
+      "descricao": "Identificar cidade, zona, tipo de frete (moto/carro/retirada).",
+      "tags_aplicadas": []
+    },
+    {
+      "etapa": 4,
+      "nome": "Fechamento - Coleta de Dados",
+      "descricao": "Nome, endereco, telefone.",
+      "tags_aplicadas": ["em_negociacao"]
+    },
+    {
+      "etapa": 5,
+      "nome": "Fechamento - Pagamento",
+      "descricao": "Definir Pix/Dinheiro/Cartao. Calcular desconto ou parcela.",
+      "tags_aplicadas": []
+    },
+    {
+      "etapa": 6,
+      "nome": "Finalizacao / Resumo",
+      "descricao": "Gerar resumo padronizado para humano. Marcar status pagamento.",
+      "tags_aplicadas": ["pedido_fechado"]
+    },
+    {
+      "etapa": 7,
+      "nome": "Pos-venda / Acompanhamento",
+      "descricao": "pendente_validacao: fluxo de pos-venda nao descrito nos documentos atuais",
+      "tags_aplicadas": []
+    }
+  ]
+}

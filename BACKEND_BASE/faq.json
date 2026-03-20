@@ -1,0 +1,116 @@
+{
+  "_meta": {
+    "versao": "1.0.0",
+    "fonte": "04_MOD_Formatacao_e_UX + 01_MOD_Identidade_e_Logistica",
+    "data_extracao": "2026-03-18"
+  },
+  "perguntas": [
+    {
+      "id": "faq_001",
+      "pergunta": "Como limpar o tatame/tapete de EVA?",
+      "resposta_curta": "Apenas pano umido e sabao neutro. Nada de produtos quimicos fortes, alcool puro ou cloro, pois ressecam o EVA.",
+      "categoria": "manutencao",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_002",
+      "pergunta": "Pode ficar no sol ou na chuva?",
+      "resposta_curta": "Melhor evitar. O sol direto por muito tempo pode desbotar ou encolher as pecas. A chuva nao estraga o material (e impermeavel), mas a agua entra nas frestas e pode dar mofo no chao se nao secar.",
+      "categoria": "manutencao",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_003",
+      "pergunta": "Pode colocar peso em cima?",
+      "resposta_curta": "pendente_validacao: resposta tecnica nao encontrada no documento original",
+      "categoria": "manutencao",
+      "resolve_automaticamente": false,
+      "escalar_para": "humano"
+    },
+    {
+      "id": "faq_004",
+      "pergunta": "O tapete flutuante precisa lavar?",
+      "resposta_curta": "Sim! Depois de usar na piscina com cloro, tem que enxaguar com agua doce pra tirar o quimico e aumentar a vida util.",
+      "categoria": "manutencao",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_005",
+      "pergunta": "Qual a durabilidade?",
+      "resposta_curta": "Se cuidar direitinho (limpar com sabao neutro e nao deixar no sol), dura anos! E material profissional.",
+      "categoria": "manutencao",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_006",
+      "pergunta": "Que horas chega a entrega?",
+      "resposta_curta": "As entregas sao por rota, comecam a sair as 14:30h e vao durante a tarde toda. Nao consigo dar hora exata, mas chega hoje a tarde.",
+      "categoria": "logistica",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_007",
+      "pergunta": "Entregam fora de Fortaleza?",
+      "resposta_curta": "Pra fora da Grande Fortaleza, o frete mais barato e seguro e direto pelo site, que calcula transportadora ou Correios automatico.",
+      "categoria": "logistica",
+      "resolve_automaticamente": true,
+      "acao_adicional": "redirecionar_site"
+    },
+    {
+      "id": "faq_008",
+      "pergunta": "Qual a idade recomendada para os tapetes educativos?",
+      "resposta_curta": "Ideal para criancas acima de 3 anos. Pecas pequenas podem ser engolidas por criancas menores. Para bebes, uso sempre com supervisao.",
+      "categoria": "seguranca",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_009",
+      "pergunta": "O tatame de 20mm serve para Jiu-Jitsu?",
+      "resposta_curta": "NAO recomendado. Pra artes marciais com quedas, o minimo seguro e o de 30mm (R$ 109). O profissional e o de 40mm (R$ 145).",
+      "categoria": "seguranca_produto",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_010",
+      "pergunta": "Tem desconto no Pix?",
+      "resposta_curta": "Sim! No Pix ou Dinheiro tem 5% de desconto sobre o valor dos produtos.",
+      "categoria": "financeiro",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_011",
+      "pergunta": "Parcela em quantas vezes?",
+      "resposta_curta": "Ate 3x sem juros no cartao. De 4x a 12x tem repasse da taxa da maquineta.",
+      "categoria": "financeiro",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_012",
+      "pergunta": "Emitem Nota Fiscal?",
+      "resposta_curta": "Sim! Pra emitir a NF, precisa do CPF/CNPJ e Nome/Razao Social.",
+      "categoria": "financeiro",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_013",
+      "pergunta": "Onde fica a loja / posso retirar?",
+      "resposta_curta": "Rua das Jaqueiras, 652 - Mondubim. Seg-Sex 8h-17h, Sab 8h-15h. Retirada e gratis!",
+      "categoria": "logistica",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_014",
+      "pergunta": "Quanto mede montado o tapete de encaixe?",
+      "resposta_curta": "Depende do modelo. Alfabeto: 2,34m². Numeros: 0,90m². Animais/Geometrico/Objetos: 0,81m².",
+      "categoria": "produto",
+      "resolve_automaticamente": true
+    },
+    {
+      "id": "faq_015",
+      "pergunta": "O tapete flutuante e salva-vidas?",
+      "resposta_curta": "NAO! O tapete flutuante NAO e salva-vidas. Use sempre com supervisao.",
+      "categoria": "seguranca",
+      "resolve_automaticamente": true
+    }
+  ]
+}

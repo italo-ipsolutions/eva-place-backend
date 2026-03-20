@@ -1,0 +1,352 @@
+{
+  "_meta": {
+    "versao": "1.0.0",
+    "fonte": "00_PROMPT_MESTRE_CONSOLIDADO + 02_MOD_Catalogo_Produtos_COMPLETO",
+    "data_extracao": "2026-03-18",
+    "notas": "Dados extraidos do Prompt Mestre. Precos e cores sujeitos a pendente_validacao conforme marcado."
+  },
+  "categorias": [
+    {
+      "id": "tatame_50x50",
+      "nome": "Tatame EVA 50x50cm",
+      "descricao": "Carro-chefe da loja. Preco regressivo por quantidade.",
+      "regra_quantidade": "Se o cliente pedir quantidade que nao e kit fechado (ex: 7), somar Kit inferior + avulsas ou sugerir Kit superior.",
+      "variantes": [
+        {
+          "espessura_mm": 10,
+          "uso_recomendado": "Bebe, Protecao Termica, chao frio",
+          "argumento_comercial": "Ideal pra fase de engatinhar, protege do frio e dos joelhinhos.",
+          "tabela_precos": [
+            { "faixa": "1 a 4 un", "preco_total": null, "preco_unitario": 12.00 },
+            { "faixa": "Kit 6", "preco_total": 69.00, "preco_unitario": 11.50 },
+            { "faixa": "Kit 8", "preco_total": 88.00, "preco_unitario": 11.00 },
+            { "faixa": "Kit 9", "preco_total": 97.20, "preco_unitario": 10.80 },
+            { "faixa": "Kit 12", "preco_total": 126.00, "preco_unitario": 10.50 },
+            { "faixa": "Kit 16", "preco_total": 164.80, "preco_unitario": 10.30 },
+            { "faixa": "Kit 18", "preco_total": 183.60, "preco_unitario": 10.20 },
+            { "faixa": "Kit 20+", "preco_total": null, "preco_unitario": 10.00, "nota": "Qtd x R$ 10,00" }
+          ],
+          "cores_disponiveis": [
+            "Branco", "Rosa BB", "Rosa", "Rosa Fluor", "Lilas BB", "Lilas",
+            "Azul Ciano", "Azul BB", "Azul", "Verde BB", "Verde Grama",
+            "Verde Bandeira", "Amarelo BB", "Amarelo", "Laranja", "Cenoura",
+            "Vermelho", "Marrom", "Preto"
+          ],
+          "cores_em_falta": ["Azul Marinho", "Laranja BB", "Lavanda"],
+          "restricoes": []
+        },
+        {
+          "espessura_mm": 15,
+          "uso_recomendado": "Intermediario, sentar, conforto extra",
+          "argumento_comercial": "Mais macio, bom pra quando o bebe comeca a sentar.",
+          "tabela_precos": [
+            { "faixa": "1 a 4 un", "preco_total": null, "preco_unitario": 17.00 },
+            { "faixa": "Kit 6", "preco_total": 99.00, "preco_unitario": 16.50 },
+            { "faixa": "Kit 8", "preco_total": 128.00, "preco_unitario": 16.00 },
+            { "faixa": "Kit 9", "preco_total": 142.20, "preco_unitario": 15.80 },
+            { "faixa": "Kit 12", "preco_total": 183.60, "preco_unitario": 15.30 },
+            { "faixa": "Kit 16", "preco_total": 236.80, "preco_unitario": 14.80 },
+            { "faixa": "Kit 18", "preco_total": 261.00, "preco_unitario": 14.50 },
+            { "faixa": "Kit 20+", "preco_total": null, "preco_unitario": 14.00, "nota": "Qtd x R$ 14,00" }
+          ],
+          "cores_disponiveis": [
+            "Rosa BB", "Rosa Fluor", "Lilas", "Azul Ciano", "Azul BB", "Azul",
+            "Verde BB", "Verde Grama", "Verde Bandeira", "Cenoura", "Vermelho"
+          ],
+          "cores_em_falta": [
+            "Preto", "Marrom", "Branco", "Amarelo", "Azul Marinho",
+            "Laranja", "Lavanda", "Lilas BB", "Rosa"
+          ],
+          "restricoes": []
+        },
+        {
+          "espessura_mm": 20,
+          "uso_recomendado": "Acustico, correr, pular, playground",
+          "argumento_comercial": "Absorve impacto de pulos e corrida. Bom pra area de brincadeira ativa.",
+          "tabela_precos": [
+            { "faixa": "1 a 4 un", "preco_total": null, "preco_unitario": 22.00 },
+            { "faixa": "Kit 6", "preco_total": 129.00, "preco_unitario": 21.50 },
+            { "faixa": "Kit 8", "preco_total": 168.00, "preco_unitario": 21.00 },
+            { "faixa": "Kit 9", "preco_total": 187.20, "preco_unitario": 20.80 },
+            { "faixa": "Kit 12", "preco_total": 243.60, "preco_unitario": 20.30 },
+            { "faixa": "Kit 16", "preco_total": 315.20, "preco_unitario": 19.70 },
+            { "faixa": "Kit 18", "preco_total": 345.60, "preco_unitario": 19.20 },
+            { "faixa": "Kit 20+", "preco_total": null, "preco_unitario": 18.67, "nota": "Qtd x R$ 18,67" }
+          ],
+          "cores_disponiveis": [
+            "Rosa BB", "Rosa", "Rosa Fluor", "Lilas", "Azul Ciano", "Azul BB",
+            "Verde BB", "Verde Grama", "Verde Bandeira", "Amarelo", "Cenoura"
+          ],
+          "cores_em_falta": [
+            "Preto", "Vermelho", "Branco", "Azul", "Azul Marinho",
+            "Laranja", "Lavanda", "Lilas BB", "Marrom"
+          ],
+          "restricoes": []
+        }
+      ]
+    },
+    {
+      "id": "tatame_1x1m",
+      "nome": "Tatame EVA 1x1m (Profissional)",
+      "descricao": "Pecas de 1 metro quadrado. Atencao ao frete de carro para grandes quantidades.",
+      "regra_quantidade": null,
+      "variantes": [
+        {
+          "espessura_mm": 10,
+          "preco_unitario": 35.00,
+          "uso_recomendado": "Area baby, forrar chao frio",
+          "cores_disponiveis": ["Amarelo", "Azul", "Azul BB", "Laranja", "Lilas", "Preto", "Rosa", "Verde Bandeira", "Verde Grama", "Vermelho"],
+          "cores_em_falta": [],
+          "restricoes": [],
+          "frete_especial": "MOTO ate 10 un. Acima disso alerta sobre volume."
+        },
+        {
+          "espessura_mm": 20,
+          "preco_unitario": 70.00,
+          "uso_recomendado": "Pilates, funcional, area escolar",
+          "cores_disponiveis": ["Amarelo", "Azul", "Laranja", "Preto", "Rosa", "Verde Bandeira", "Vermelho"],
+          "cores_em_falta": [],
+          "restricoes": ["NAO recomendado para artes marciais com quedas"],
+          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica."
+        },
+        {
+          "espessura_mm": 30,
+          "preco_unitario": 109.00,
+          "uso_recomendado": "Jiu-Jitsu infantil, Karate, Judo iniciante",
+          "cores_disponiveis": ["Azul", "Preto", "Vermelho"],
+          "cores_em_falta": [],
+          "restricoes": ["Minimo seguro para treino de luta"],
+          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica."
+        },
+        {
+          "espessura_mm": 40,
+          "preco_unitario": 145.00,
+          "uso_recomendado": "Profissional. Quedas de adulto, Dojo oficial.",
+          "cores_disponiveis": ["Azul", "Preto", "Vermelho"],
+          "cores_em_falta": [],
+          "restricoes": [],
+          "frete_especial": "CARRO obrigatorio. Confirmar taxa com logistica."
+        }
+      ]
+    },
+    {
+      "id": "tapetes_encaixe_kids",
+      "nome": "Tapetes de Encaixe Modulares 30x30cm (Kids/Pedagogico)",
+      "descricao": "Todos tem espessura de 8mm. Foco educacional.",
+      "restricoes_gerais": {
+        "idade_recomendada": "Acima de 3 anos",
+        "motivo": "Pecas pequenas destacaveis podem ser engolidas por criancas menores. Uso com supervisao para bebes."
+      },
+      "produtos": [
+        {
+          "modelo": "Alfabeto (A-Z)",
+          "qtd_pecas": 26,
+          "area_total_m2": 2.34,
+          "area_descricao": "Retangulo grande",
+          "argumento_comercial": "Ensina todas as letras! Cobre uma area otima no quarto e a crianca aprende encaixando.",
+          "preco": 139.00
+        },
+        {
+          "modelo": "Numeros (0-9)",
+          "qtd_pecas": 10,
+          "area_total_m2": 0.90,
+          "area_descricao": "Quadrado 3x3",
+          "argumento_comercial": "Ideal para aprender a contar. Os numeros saem da peca.",
+          "preco": 55.00
+        },
+        {
+          "modelo": "Animais",
+          "qtd_pecas": 9,
+          "area_total_m2": 0.81,
+          "area_descricao": "90x90cm",
+          "argumento_comercial": "Bichinhos destacaveis. Estimula a fala e sons dos animais.",
+          "preco": 49.00
+        },
+        {
+          "modelo": "Geometrico",
+          "qtd_pecas": 9,
+          "area_total_m2": 0.81,
+          "area_descricao": "90x90cm",
+          "argumento_comercial": "Formas (quadrado, triangulo). Otimo para logica.",
+          "preco": 49.00
+        },
+        {
+          "modelo": "Objetos",
+          "qtd_pecas": 9,
+          "area_total_m2": 0.81,
+          "area_descricao": "90x90cm",
+          "argumento_comercial": "Desenhos de brinquedos/transportes. Quebra-cabeca gigante.",
+          "preco": 49.00
+        },
+        {
+          "modelo": "Amarelinha",
+          "qtd_pecas": 12,
+          "area_total_m2": null,
+          "area_descricao": "Caminho Linear",
+          "argumento_comercial": "Monta e desmonta. A crianca constroi a propria amarelinha.",
+          "preco": 69.00
+        },
+        {
+          "modelo": "Arco-Iris",
+          "qtd_pecas": 1,
+          "area_total_m2": null,
+          "area_descricao": "30x30 - Brinquedo 3D",
+          "argumento_comercial": "NAO e piso. E brinquedo de mesa para montar tuneis e pontes.",
+          "preco": 38.90
+        }
+      ]
+    },
+    {
+      "id": "rolos_esteiras",
+      "nome": "Rolos e Esteiras (Portáteis com Alça)",
+      "descricao": "Nao desmontam. Vem com alca para levar no parque.",
+      "produtos": [
+        {
+          "modelo": "Pista/Cidade",
+          "tamanho": "2,00m x 1,00m",
+          "espessura_mm": 5,
+          "argumento_comercial": "Tapetao com ruas para brincar de carrinho.",
+          "preco": 99.00
+        },
+        {
+          "modelo": "Mesversario",
+          "tamanho": "2,00m x 1,00m",
+          "espessura_mm": 5,
+          "argumento_comercial": "Cenario com regua de meses para fotos do bebe.",
+          "preco": 99.00
+        },
+        {
+          "modelo": "Amarelinha Rolo",
+          "tamanho": "1,70m x 0,60m",
+          "espessura_mm": 5,
+          "argumento_comercial": "Ja vem pronta, so desenrolar e pular.",
+          "preco": 59.00
+        }
+      ]
+    },
+    {
+      "id": "miudezas",
+      "nome": "Miudezas (Upsell de Caixa)",
+      "descricao": "Itens de ALTO GIRO e TICKET BAIXO. Oferecer como algo a mais no final da venda (Upsell).",
+      "produtos": [
+        {
+          "modelo": "Saco de Letras",
+          "qtd_pecas": 107,
+          "argumento_comercial": "Letras soltas para mesa.",
+          "preco": 14.90
+        },
+        {
+          "modelo": "Pote de Letras",
+          "qtd_pecas": 138,
+          "argumento_comercial": "Vem no pote organizador.",
+          "preco": 36.90
+        }
+      ]
+    },
+    {
+      "id": "cartelas_avulsas",
+      "nome": "Cartelas Avulsas (Jogos e Atividades)",
+      "descricao": "EVA adesivado ou impresso. Tamanho folha A4. Preco unico R$ 5,00.",
+      "preco_unico": 5.00,
+      "argumento_geral": "Aproveita o frete! Por 5 reais voce leva um jogo educativo ou reforco escolar.",
+      "produtos": [
+        { "modelo": "Jogo da Velha", "argumento": "Classico! Otimo para raciocinio rapido." },
+        { "modelo": "Tangram", "argumento": "Quebra-cabeca chines. Desenvolve geometria." },
+        { "modelo": "Tabuada / Multiplicacao", "argumento": "Essencial para fase escolar." },
+        { "modelo": "Vogais", "argumento": "Para criancas comecando a ler." },
+        { "modelo": "Corpo Humano", "argumento": "Esqueleto montavel simples." },
+        { "modelo": "Mapa do Brasil", "argumento": "Mapa colorido com os estados." },
+        { "modelo": "Mapa da Regiao Sul", "argumento": "Focado na geografia da regiao Sul." },
+        { "modelo": "Resta Um", "argumento": "Jogo de estrategia individual. Concentracao." },
+        { "modelo": "Domino", "argumento": "Jogo tradicional. Associacao e contagem." },
+        { "modelo": "Memoria", "argumento": "Jogo da memoria em EVA. Duravel." },
+        { "modelo": "Dama / Trilha", "argumento": "Dois jogos em um. Raciocinio logico." },
+        { "modelo": "Relogio / Profissoes", "argumento": "Ensina a ver horas ou identificar profissoes.", "nota": "pendente_validacao: verificar estoque visual" }
+      ]
+    },
+    {
+      "id": "yoga_mat",
+      "nome": "Tapete de Yoga (Mat) com Alca",
+      "produtos": [
+        {
+          "modelo": "Tapete Yoga",
+          "tamanho": "1,70m x 60cm",
+          "espessura_mm": 5,
+          "preco": 49.00,
+          "diferencial": "Acompanha alca de transporte. Antiderrapante.",
+          "cores_disponiveis": ["Amarelo", "Azul", "Laranja", "Preto", "Verde Grama"],
+          "restricoes": ["Nao usar tenis abrasivo", "Limpar com pano umido"]
+        }
+      ]
+    },
+    {
+      "id": "cantoneira",
+      "nome": "Cantoneira de Protecao (Quina) - Autoadesiva",
+      "produtos": [
+        {
+          "modelo": "Cantoneira L",
+          "tamanho": "1m altura x 4cm x 4cm",
+          "espessura_mm": 10,
+          "preco": 12.00,
+          "diferencial": "Adesivo de alta fixacao. Instalacao facil.",
+          "cores_disponiveis": ["Amarelo", "Azul", "Cinza", "Preto", "Vermelho"],
+          "restricoes": ["Parede limpa e seca para o adesivo pegar"]
+        }
+      ]
+    },
+    {
+      "id": "step_eva",
+      "nome": "Step EVA (Exercicio)",
+      "produtos": [
+        { "modelo": "Pequeno", "tamanho": "60x30cm", "altura_cm": 10, "preco": 119.90, "cor": "Azul com Preto" },
+        { "modelo": "Grande", "tamanho": "80x30cm", "altura_cm": 10, "preco": 199.90, "cor": "Azul com Preto" },
+        { "modelo": "Grande Alto", "tamanho": "80x30cm", "altura_cm": 14, "preco": 279.90, "cor": "Azul com Preto" }
+      ]
+    },
+    {
+      "id": "flutuante",
+      "nome": "Tapetes Flutuantes (Piscina/Lagos)",
+      "aviso_seguranca": "NAO e salva-vidas!",
+      "produtos": [
+        {
+          "modelo": "1x1m",
+          "espessura_mm": 30,
+          "preco": 139.90,
+          "cores_disponiveis": ["Amarelo", "Azul", "Lilas", "Vermelho"]
+        },
+        {
+          "modelo": "2x1m",
+          "espessura_mm": 30,
+          "preco": 239.90,
+          "nota": "Cabe adulto deitado",
+          "cores_disponiveis": ["Amarelo", "Azul", "Lilas", "Vermelho"]
+        }
+      ]
+    },
+    {
+      "id": "prancha_natacao",
+      "nome": "Prancha Natacao",
+      "produtos": [
+        {
+          "modelo": "Prancha",
+          "tamanho": "42x28cm",
+          "espessura_mm": 30,
+          "preco": 29.90,
+          "cores_disponiveis": ["Azul", "Vermelho"]
+        }
+      ]
+    },
+    {
+      "id": "protetor_porta",
+      "nome": "Protetor de Porta (Bichinho)",
+      "produtos": [
+        {
+          "modelo": "Protetor Porta",
+          "funcao": "Evita prender o dedo na porta",
+          "preco": 14.90,
+          "modelos_disponiveis": ["Joaninha", "Unicornio", "Vaquinha"]
+        }
+      ]
+    }
+  ]
+}

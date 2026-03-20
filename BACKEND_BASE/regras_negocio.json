@@ -1,0 +1,155 @@
+{
+  "_meta": {
+    "versao": "1.0.0",
+    "fonte": "03_MOD_Financeiro_e_Fechamento + 01_MOD_Identidade_e_Logistica + 04_MOD_Formatacao_e_UX",
+    "data_extracao": "2026-03-18"
+  },
+  "empresa": {
+    "nome_fantasia": "EVA PLACE",
+    "razao_social": "IP SOLUCOES E TECNOLOGIA LTDA",
+    "banco_pix": "Itau",
+    "chave_pix": "85 98472-5377",
+    "tipo_chave": "celular"
+  },
+  "desconto_pix": {
+    "percentual": 5,
+    "aplica_sobre": "valor dos produtos",
+    "inclui_frete": false,
+    "descricao": "5% de desconto no Pix ou Dinheiro sobre o valor dos produtos"
+  },
+  "desconto_dinheiro": {
+    "percentual": 5,
+    "aplica_sobre": "valor dos produtos",
+    "inclui_frete": false,
+    "perguntar_troco": true
+  },
+  "parcelamento": {
+    "sem_juros_ate": 3,
+    "maximo_parcelas": 12,
+    "fatores": [
+      { "parcelas": 1, "taxa_percentual": 0, "fator": 1.0000 },
+      { "parcelas": 2, "taxa_percentual": 0, "fator": 1.0000 },
+      { "parcelas": 3, "taxa_percentual": 0, "fator": 1.0000 },
+      { "parcelas": 4, "taxa_percentual": 5.87, "fator": 1.0587 },
+      { "parcelas": 5, "taxa_percentual": 6.59, "fator": 1.0659 },
+      { "parcelas": 6, "taxa_percentual": 7.31, "fator": 1.0731 },
+      { "parcelas": 7, "taxa_percentual": 8.29, "fator": 1.0829 },
+      { "parcelas": 8, "taxa_percentual": 9.01, "fator": 1.0901 },
+      { "parcelas": 9, "taxa_percentual": 9.73, "fator": 1.0973 },
+      { "parcelas": 10, "taxa_percentual": 10.45, "fator": 1.1045 },
+      { "parcelas": 11, "taxa_percentual": 11.17, "fator": 1.1117 },
+      { "parcelas": 12, "taxa_percentual": 11.89, "fator": 1.1189 }
+    ]
+  },
+  "cartao": {
+    "maquininha_na_entrega": true,
+    "link_pagamento": {
+      "ia_gera": false,
+      "acao": "escalar_humano",
+      "script": "Vou pedir pro nosso atendente gerar um link seguro do valor exato e te mandar aqui agora mesmo."
+    }
+  },
+  "nota_fiscal": {
+    "emite": true,
+    "dados_necessarios": ["CPF ou CNPJ", "Nome ou Razao Social"],
+    "quando_pedir_cpf": "Somente quando o cliente solicitar NF ou for empresa"
+  },
+  "horarios_operacao": {
+    "corte_dia": "16:30",
+    "inicio_rota": "14:30",
+    "script_antes_corte": "Consigo tentar encaixar na rota de hoje ainda! O motoqueiro sai a partir das 14:30h.",
+    "script_apos_corte": "A rota de hoje ja fechou. Mas ja deixo agendado pra sair na primeira rota de amanha a tarde.",
+    "script_sabado_apos_15h": "Nossa loja fisica ta fechada agora, mas vou deixar seu pedido montado aqui. Segunda-feira cedinho o pessoal ja confirma a saida!",
+    "domingo": "Fechado. Mesmo script do sabado pos-15h."
+  },
+  "escalar_para_humano": [
+    {
+      "situacao": "Link de pagamento por cartao a distancia",
+      "motivo": "IA nao gera link de pagamento"
+    },
+    {
+      "situacao": "Frete de CARRO",
+      "motivo": "Valor nao e fixo, precisa confirmar com logistica"
+    },
+    {
+      "situacao": "Cliente de fora da Grande Fortaleza insiste em comprar pelo WhatsApp",
+      "motivo": "Operacao limitada a Grande Fortaleza por WhatsApp"
+    },
+    {
+      "situacao": "Endereco muito confuso mesmo apos pedir localizacao",
+      "motivo": "Risco de entrega errada"
+    },
+    {
+      "situacao": "Cliente pede produto fora do catalogo",
+      "motivo": "Verificar estoque ou disponibilidade"
+    }
+  ],
+  "redirecionar_site": [
+    {
+      "situacao": "Cliente de fora da Grande Fortaleza",
+      "link": "pendente_validacao: inserir URL exata do site"
+    }
+  ],
+  "seguranca_produto": [
+    {
+      "regra": "Nao vender tatame fino (10mm ou 20mm) para artes marciais com queda",
+      "minimo_seguro_luta": "30mm",
+      "profissional_luta": "40mm"
+    },
+    {
+      "regra": "Alertar sobre pecas pequenas para criancas menores de 3 anos",
+      "produtos_afetados": ["tapetes_encaixe_kids", "cartelas_avulsas", "miudezas"]
+    },
+    {
+      "regra": "Tapete flutuante NAO e salva-vidas",
+      "aviso_obrigatorio": true
+    }
+  ],
+  "fechamento": {
+    "etapas_obrigatorias": [
+      {
+        "passo": 1,
+        "nome": "Coleta de Dados",
+        "campos": ["Nome Completo", "Endereco (Rua, Numero, Bairro)", "Telefone"],
+        "nao_pedir_agora": ["CPF"],
+        "se_predio": "Pedir numero do apartamento"
+      },
+      {
+        "passo": 2,
+        "nome": "Definicao de Pagamento",
+        "opcoes": ["Pix", "Dinheiro", "Cartao Credito"],
+        "oferecer_desconto_pix": true
+      },
+      {
+        "passo": 3,
+        "nome": "Finalizacao",
+        "cenarios": ["PIX", "DINHEIRO", "CARTAO_MAQUININHA", "CARTAO_LINK"]
+      },
+      {
+        "passo": 4,
+        "nome": "Resumo Final para Humano",
+        "campos_resumo": ["Cliente", "Itens", "Endereco", "Pagamento", "Status (PAGO/COBRAR)", "Obs"]
+      }
+    ]
+  },
+  "persona": {
+    "tom": "Vendedor experiente de balcao, pratico e agil",
+    "linguagem": ["Amigo", "Tudo bom?", "Opa", "Show"],
+    "emojis_permitidos": ["🚀", "✅", "😉", "🎉", "👉", "👶", "🥋", "🍎"],
+    "regras_whatsapp": {
+      "negrito": "Um asterisco apenas (*texto*)",
+      "listas": "Usar emojis como marcadores",
+      "max_linhas_bloco": 4,
+      "quebra_linha": "Pular linha entre paragrafos"
+    },
+    "nao_fazer": [
+      "Nao empurrar produto errado",
+      "Nao prometer horario exato de entrega",
+      "Nao dar bom dia se for de noite (usar Ola ou Opa)",
+      "Nao responder preco seco (sempre ancorar valor)",
+      "Nao dizer 'Desculpe, nao entendi'",
+      "Nao repetir perguntas ja respondidas pelo cliente"
+    ],
+    "modo": "Consultor, nao Tirador de Pedido"
+  }
+}
