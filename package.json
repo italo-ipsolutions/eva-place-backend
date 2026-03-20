@@ -18,7 +18,10 @@
     "test:fallback": "curl -s -X POST http://localhost:3100/webhooks/manychat/inbound -H 'Content-Type: application/json' -d @examples/payload_fallback.json | jq .",
     "test:texto-livre": "curl -s -X POST http://localhost:3100/webhooks/manychat/inbound -H 'Content-Type: application/json' -d @examples/payload_texto_livre.json | jq .",
     "test:audio": "curl -s -X POST http://localhost:3100/webhooks/manychat/inbound -H 'Content-Type: application/json' -d @examples/payload_audio.json | jq .",
-    "test:imagem": "curl -s -X POST http://localhost:3100/webhooks/manychat/inbound -H 'Content-Type: application/json' -d @examples/payload_imagem.json | jq ."
+    "test:imagem": "curl -s -X POST http://localhost:3100/webhooks/manychat/inbound -H 'Content-Type: application/json' -d @examples/payload_imagem.json | jq .",
+    "sync:catalog": "node --env-file=.env --import=tsx scripts/sync-catalog.ts",
+    "sync:catalog:dry": "node --env-file=.env --import=tsx scripts/sync-catalog.ts --dry-run",
+    "sync:catalog:diff": "node --env-file=.env --import=tsx scripts/sync-catalog.ts --diff"
   },
   "dependencies": {
     "dotenv": "^16.6.1",
