@@ -12,16 +12,23 @@ Subdominio: `api.evaplace.com.br`
 ```
 ManyChat (WhatsApp)
   |
-  +-- External Request (webhook POST)
+  +-- Dynamic Block (RECOMENDADO — sem atraso de 1 turno)
+  |     POST /webhooks/manychat/dynamic
   |     Header: X-Webhook-Secret
-  |     Body: "Add Full Contact Data" (recomendado)
-  |           ou JSON manual flat (compativel)
+  |     Body: "Add Full Contact Data"
+  |     Resposta: mensagem pronta no formato Dynamic Block v2
+  |               -> ManyChat envia direto ao contato
+  |
+  +-- External Request (LEGADO — manter por compatibilidade)
+  |     POST /webhooks/manychat/inbound
+  |     Resposta: JSON com backend_reply -> custom field -> Send Message
+  |     ⚠️ Causa atraso de 1 turno por contaminacao de custom_fields
   |
   v
 Backend (este repositorio)
   |
   +-- Auth (valida secret)
-  +-- Parser (detecta formato nativo/flat, normaliza)
+  +-- Parser (detecta formato nativo/flat, sanitiza custom_fields)
   +-- Memory (ultimos N turnos por lead, in-memory)
   +-- Pipeline:
   |     1. Matchers locais (frete, FAQ, catalogo)
@@ -30,7 +37,8 @@ Backend (este repositorio)
   +-- Logger (JSON estruturado)
   |
   v
-Resposta JSON -> ManyChat -> WhatsApp do cliente
+Dynamic Block: { version: "v2", content: { type: "whatsapp", messages: [...] } }
+  -> ManyChat envia direto ao contato (sem custom field intermediario)
 ```
 
 ## Estrutura do repositorio
@@ -52,7 +60,8 @@ EVA_PLACE_BACKEND_REPO/
     server.ts                # Ponto de entrada
     routes/
       health.ts              # GET /health
-      manychat.ts            # POST /webhooks/manychat/inbound
+      manychat.ts            # POST /webhooks/manychat/inbound (legado)
+      manychat-dynamic.ts    # POST /webhooks/manychat/dynamic (recomendado)
     lib/
       auth.ts                # Validacao webhook secret
       manychat-parser.ts     # Normaliza payload ManyChat
@@ -158,26 +167,52 @@ O deploy e feito importando este repositorio GitHub diretamente no painel da Hos
 
 ## Configurar no ManyChat (pos-deploy)
 
-### Modo recomendado: Add Full Contact Data (nativo)
+### ✅ Modo recomendado: Dynamic Block (sem atraso)
 
-> **Este e o modo preferido.** Nao exige montar JSON manual no editor do ManyChat.
+> **Este e o modo correto.** A resposta do servidor vai direto para o contato.
+> Nao usa custom field intermediario. Elimina o atraso de 1 turno.
 
-1. ManyChat > Automation > Flow > bloco **External Request**
-2. **URL:** `https://api.evaplace.com.br/webhooks/manychat/inbound`
-3. **Method:** POST
-4. **Headers:**
+1. ManyChat > Automation > Flow
+2. Adicionar bloco **Dynamic Block** (nao External Request)
+3. **URL:** `https://api.evaplace.com.br/webhooks/manychat/dynamic`
+4. **Method:** POST
+5. **Headers:**
    - `Content-Type: application/json`
    - `X-Webhook-Secret: SEU_SECRET` (mesmo valor do .env no servidor)
-5. **Body:** clicar em **Add Full Contact Data** (botao azul no editor)
+6. **Body:** clicar em **Add Full Contact Data** (botao azul no editor)
    - Nao precisa montar JSON manual
    - O ManyChat envia automaticamente todos os campos do contato dentro de `subscriber`
-6. **Response Mapping:** mapear `backend_reply` para a variavel de resposta do flow
+7. **NAO precisa de Response Mapping** — o Dynamic Block envia a resposta direto
+8. **NAO precisa de bloco "Send Message" depois** — a mensagem ja vai pro WhatsApp
 
-O backend detecta automaticamente se o payload e nativo (`subscriber`) ou flat (JSON manual).
+O servidor retorna:
+```json
+{
+  "version": "v2",
+  "content": {
+    "type": "whatsapp",
+    "messages": [{ "type": "text", "text": "Resposta aqui..." }],
+    "actions": [
+      { "action": "add_tag", "tag_name": "interesse_tatame" },
+      { "action": "set_field_value", "field_name": "eva_debug_source", "value": "catalogo|produto|high" }
+    ]
+  }
+}
+```
 
-### Modo alternativo: JSON manual (compatibilidade)
+### ⚠️ Modo legado: External Request (manter por compatibilidade)
 
-Se por algum motivo precisar usar JSON manual no body:
+> **NAO recomendado.** Causa atraso de 1 turno porque o ManyChat persiste
+> `backend_reply` em custom_fields e reenvia na proxima mensagem.
+
+- URL: `https://api.evaplace.com.br/webhooks/manychat/inbound`
+- Requer Response Mapping: `backend_reply` -> variavel do flow
+- Requer bloco "Send Message {{backend_reply}}" depois do External Request
+- **Problema:** custom_fields contaminam a proxima mensagem com a resposta anterior
+
+### Modo alternativo: JSON manual flat (compatibilidade)
+
+Se por algum motivo precisar usar JSON manual no body (funciona em ambas as rotas):
 
 ```json
 {
@@ -190,4 +225,4 @@ Se por algum motivo precisar usar JSON manual no body:
 }
 ```
 
-> Ambos os formatos funcionam. O parser identifica qual formato veio e normaliza.
+> O parser identifica qual formato veio e normaliza automaticamente.

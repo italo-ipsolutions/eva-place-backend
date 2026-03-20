@@ -1,0 +1,25 @@
+{
+  "_comment": "Exemplo de resposta Dynamic Block v2 retornada pelo endpoint /webhooks/manychat/dynamic",
+  "_comment2": "O ManyChat envia esta mensagem diretamente ao contato — sem custom field intermediario",
+  "version": "v2",
+  "content": {
+    "type": "whatsapp",
+    "messages": [
+      {
+        "type": "text",
+        "text": "Opa! Tudo bem? 😊\n\n📦 *Tatame EVA 50×50cm — 20mm*\nPreço: *R$ 21,00* a peça (unidade)\n\n🎨 Cores disponíveis: azul, vermelho, preto, cinza\n\n💡 Ideal pra quarto de criança, home office e academia leve.\n\nQuer saber o frete ou montar um kit? É só falar!"
+      }
+    ],
+    "actions": [
+      {
+        "action": "set_field_value",
+        "field_name": "eva_debug_source",
+        "value": "catalogo|produto_50x50_20mm|high"
+      },
+      {
+        "action": "add_tag",
+        "tag_name": "interesse_tatame"
+      }
+    ]
+  }
+}

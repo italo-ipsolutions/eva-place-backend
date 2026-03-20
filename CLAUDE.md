@@ -42,6 +42,8 @@ npm run sync:catalog:dry   # Simular sem salvar
 
 ## Convencoes
 
+- **Rota recomendada:** `/webhooks/manychat/dynamic` (Dynamic Block — resposta direto ao contato)
+- **Rota legada:** `/webhooks/manychat/inbound` (External Request — causa atraso 1 turno)
 - Matchers locais primeiro, OpenAI segundo, fallback humano terceiro
 - CONTEXT_BASE_PATH default: `./BACKEND_BASE` (interno ao repo)
 - Startup file para producao: `dist/server.js`
